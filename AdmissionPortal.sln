@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionPortal.Service.API", "AdmissionPortal.Service.API\AdmissionPortal.Service.API.csproj", "{AEC2B834-2AC3-4881-91D2-37299A8F2866}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionPortal.Application", "AdmissionPortal.Application\AdmissionPortal.Application.csproj", "{7044B6B6-FD8D-4CDF-B681-46547B9EE677}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionPortal.Domain", "AdmissionPortal.Domain\AdmissionPortal.Domain.csproj", "{19D69914-A400-440C-8A44-E919967D1539}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionPortal.Infra.Data", "AdmissionPortal.Infra.Data\AdmissionPortal.Infra.Data.csproj", "{603C41B7-674D-410B-87F9-300E590BAA8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionPortal.ThirdPartyService", "AdmissionPortal.ThirdPartyService\AdmissionPortal.ThirdPartyService.csproj", "{8A4614A5-47DE-485E-9CF5-4B9F48521704}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissionPortal.Service.API.Test", "AdmissionPortal.Service.API.Test\AdmissionPortal.Service.API.Test.csproj", "{6088886A-5BC5-4BF1-9514-A5C1A785490A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEC2B834-2AC3-4881-91D2-37299A8F2866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEC2B834-2AC3-4881-91D2-37299A8F2866}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEC2B834-2AC3-4881-91D2-37299A8F2866}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEC2B834-2AC3-4881-91D2-37299A8F2866}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7044B6B6-FD8D-4CDF-B681-46547B9EE677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7044B6B6-FD8D-4CDF-B681-46547B9EE677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7044B6B6-FD8D-4CDF-B681-46547B9EE677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7044B6B6-FD8D-4CDF-B681-46547B9EE677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19D69914-A400-440C-8A44-E919967D1539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D69914-A400-440C-8A44-E919967D1539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D69914-A400-440C-8A44-E919967D1539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D69914-A400-440C-8A44-E919967D1539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603C41B7-674D-410B-87F9-300E590BAA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603C41B7-674D-410B-87F9-300E590BAA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603C41B7-674D-410B-87F9-300E590BAA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603C41B7-674D-410B-87F9-300E590BAA8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A4614A5-47DE-485E-9CF5-4B9F48521704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A4614A5-47DE-485E-9CF5-4B9F48521704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A4614A5-47DE-485E-9CF5-4B9F48521704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A4614A5-47DE-485E-9CF5-4B9F48521704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6088886A-5BC5-4BF1-9514-A5C1A785490A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6088886A-5BC5-4BF1-9514-A5C1A785490A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6088886A-5BC5-4BF1-9514-A5C1A785490A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6088886A-5BC5-4BF1-9514-A5C1A785490A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DA0C688-9992-435D-981B-F1993CCC1518}
+	EndGlobalSection
+EndGlobal
