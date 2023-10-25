@@ -29,10 +29,8 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             if (!string.IsNullOrEmpty(command.LastNameLocal)) userDetails.LastNameLocal = command.LastNameLocal;
             if (!string.IsNullOrEmpty(command.FatherNameLocal)) userDetails.FatherNameLocal = command.FatherNameLocal;
             if (!string.IsNullOrEmpty(command.GrandFatherNameLocal)) userDetails.GrandFatherNameLocal = command.GrandFatherNameLocal;
-            //todo
             userDetails.UserName = command.EmailAddress;
-            userDetails.UserPassword = "test";
-
+            userDetails.UserPassword = "test";//last 4 digit of mobile + last 4 from national id
             userDetails.TermsAcknowledged = command.TermsAcknowledged;
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
             userDetails.InsertedBy = command.InsertedBy;

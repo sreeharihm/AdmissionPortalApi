@@ -1,5 +1,7 @@
 using AdmissionPortal.Application;
+using AdmissionPortal.Application.Feature.Registration.Validator;
 using AdmissionPortal.Infra.Data;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -18,12 +20,17 @@ builder.Services.AddCors(options =>
             policy.AllowCredentials();
         });
 });
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddFluentValidation(conf =>
+{
+    conf.RegisterValidatorsFromAssembly(typeof(CreateApplicationUserValidator).Assembly);
+    conf.AutomaticValidationEnabled = false;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
