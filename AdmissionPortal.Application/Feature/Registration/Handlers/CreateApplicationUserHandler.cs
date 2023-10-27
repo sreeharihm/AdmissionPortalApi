@@ -1,12 +1,14 @@
-﻿using AdmissionPortal.Application.Feature.Registration.Commands;
+﻿using AdmissionPortal.Application.Extensions;
+using AdmissionPortal.Application.Feature.Registration.Commands;
 using AdmissionPortal.Application.Helpers;
+using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data.Interface;
 using AdmissionPortal.Infra.Data.Models;
 using MediatR;
 
 namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
 {
-    internal class CreateApplicationUserHandler : IRequestHandler<CreateApplicationUserCommand, int>
+    internal class CreateApplicationUserHandler : IRequestHandler<CreateApplicationUserCommand, UserDto>
     {
         private readonly IApplicationUserRepository _applicationUserRepository;
 
@@ -14,9 +16,10 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
         {
             _applicationUserRepository = applicationUserRepository;
         }
-        public async Task<int> Handle(CreateApplicationUserCommand command, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(CreateApplicationUserCommand command, CancellationToken cancellationToken)
         {
             var userDetails = new TblSsaApplicationUser();
+            var response = new UserDto();
             userDetails.NationalId = command.NationalId;
             userDetails.Nationality = command.Nationality;
             userDetails.EmailAddress = command.EmailAddress;
@@ -31,13 +34,16 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             if (!string.IsNullOrEmpty(command.FatherNameLocal)) userDetails.FatherNameLocal = command.FatherNameLocal;
             if (!string.IsNullOrEmpty(command.GrandFatherNameLocal)) userDetails.GrandFatherNameLocal = command.GrandFatherNameLocal;
             userDetails.UserName = command.EmailAddress;
-            string password = command.Mobile.Substring(command.Mobile.Length - 4) + command.NationalId.Substring(command.NationalId.Length - 4);
-            userDetails.UserPassword = Encryption.Base64Encode(password); 
+            var activationCode = command.NationalId.GetLastFourCharacters() + command.Mobile.GetLastFourCharacters();
+            userDetails.UserPassword = activationCode.Base64Encode();
             userDetails.TermsAcknowledged = command.TermsAcknowledged;
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
             userDetails.InsertedBy = command.InsertedBy;
             userDetails.InsertedDateTime = DateTime.UtcNow;
-            return await _applicationUserRepository.AddUser(userDetails);
+            response.UserId = await _applicationUserRepository.AddUser(userDetails);
+            response.Message = "User registration succesfull";
+            response.ActivationCode = activationCode;
+            return response;
         }
     }
 }

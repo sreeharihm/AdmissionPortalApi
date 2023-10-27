@@ -1,4 +1,5 @@
 ﻿using AdmissionPortal.Application.Feature.Login.Commands;
+using AdmissionPortal.Application.Feature.Registration.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,6 @@ namespace AdmissionPortal.Service.API.Controllers
 
         }
         [HttpPost]
-        [Route("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginCommand model)
         {
             bool isSucess = await _mediator.Send(model);
@@ -30,14 +30,23 @@ namespace AdmissionPortal.Service.API.Controllers
         // POST api/<LoginController>
         [HttpPost]
         [Route("ForgetPassword")]
-        public void ForgetPassword([FromBody] string value)
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordCommand model)
         {
+            return Ok(await _mediator.Send(model));
         }
         // POST api/<LoginController>
         [HttpPost]
         [Route("ResetPassword")]
-        public void ResetPassword([FromBody] string value)
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetCommand model)
         {
+            return Ok(await _mediator.Send(model));
+        }
+
+        [HttpPost]
+        [Route("ActivatePassword")]
+        public async Task<IActionResult> ActivatePassword([FromBody] PasswordActivateCommand model)
+        {
+            return Ok(await _mediator.Send(model));
         }
 
     }

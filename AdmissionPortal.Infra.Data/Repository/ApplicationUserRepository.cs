@@ -17,9 +17,18 @@ namespace AdmissionPortal.Infra.Data.Repository
             return result.Entity.UserId;
         }
 
+        public async Task<bool> ResetPassword(string emailId, string password)
+        {
+            var result = _sisContext.TblSsaApplicationUsers.First(x => x.EmailAddress == emailId);
+            result.UserPassword = password;
+            await _sisContext.SaveChangesAsync();
+            return true;
+        }
+
         public bool IsEmailAlreadyRegistered(string emailAddress) => _sisContext.TblSsaApplicationUsers.Any(x => x.EmailAddress == emailAddress);
         public bool IsMobileAlreadyRegistered(string mobile) => _sisContext.TblSsaApplicationUsers.Any(x => x.Mobile == mobile);
         public async Task<bool> IsValidUserName(string username) => _sisContext.TblSsaApplicationUsers.Any(x => x.UserName == username);
+        public async Task<bool> IsValidActivationCode(string password) => _sisContext.TblSsaApplicationUsers.Any(x => x.UserPassword == password);
         public async Task<string> GetPassword(string username)
         {
             string password = _sisContext.TblSsaApplicationUsers.Where(x => x.UserName == username)
@@ -27,6 +36,6 @@ namespace AdmissionPortal.Infra.Data.Repository
                                                                 .FirstOrDefault();
             return password;
         }
-        
+
     }
 }

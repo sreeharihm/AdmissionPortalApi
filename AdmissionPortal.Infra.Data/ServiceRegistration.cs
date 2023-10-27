@@ -11,7 +11,7 @@ namespace AdmissionPortal.Infra.Data
     {
         public static async void AddInfraDataRegistration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<SisContext>(opt => opt.UseSqlServer(configuration["ConnectionString:AdmissionPortalConnection"]));
+            services.AddDbContext<SisContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("AdmissionPortalConnection")));
 
             services.AddScoped<ICountryMasterRepository, CountryMasterRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
