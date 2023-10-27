@@ -7,7 +7,7 @@ namespace AdmissionPortal.Application.CustomValidations
         public static IRuleBuilder<T, string> PhoneNumber<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder
-                .Matches(@"@""^\+?[0-9]{5,13}$")
+                .Matches(@"^\+?[0-9]*$")
                 .WithMessage("Invalid Mobile number ");
             return options;
         }

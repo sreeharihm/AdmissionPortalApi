@@ -1,4 +1,5 @@
 ﻿using AdmissionPortal.Application.Feature.Registration.Commands;
+using AdmissionPortal.Application.Helpers;
 using AdmissionPortal.Infra.Data.Interface;
 using AdmissionPortal.Infra.Data.Models;
 using MediatR;
@@ -30,7 +31,8 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             if (!string.IsNullOrEmpty(command.FatherNameLocal)) userDetails.FatherNameLocal = command.FatherNameLocal;
             if (!string.IsNullOrEmpty(command.GrandFatherNameLocal)) userDetails.GrandFatherNameLocal = command.GrandFatherNameLocal;
             userDetails.UserName = command.EmailAddress;
-            userDetails.UserPassword = "test";//last 4 digit of mobile + last 4 from national id
+            string password = command.Mobile.Substring(command.Mobile.Length - 4) + command.NationalId.Substring(command.NationalId.Length - 4);
+            userDetails.UserPassword = Encryption.Base64Encode(password); 
             userDetails.TermsAcknowledged = command.TermsAcknowledged;
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
             userDetails.InsertedBy = command.InsertedBy;
