@@ -1,5 +1,6 @@
 using AdmissionPortal.Application;
 using AdmissionPortal.Application.Feature.Registration.Validator;
+using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data;
 using FluentValidation.AspNetCore;
 
@@ -31,14 +32,21 @@ builder.Services.AddFluentValidation(conf =>
     conf.RegisterValidatorsFromAssembly(typeof(CreateApplicationUserValidator).Assembly);
     conf.AutomaticValidationEnabled = false;
 });
+
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

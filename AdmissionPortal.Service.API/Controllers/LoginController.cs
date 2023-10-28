@@ -17,7 +17,6 @@ namespace AdmissionPortal.Service.API.Controllers
 
         }
         [HttpPost]
-        [Route("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginCommand model)
         {
             bool isSucess = await _mediator.Send(model);

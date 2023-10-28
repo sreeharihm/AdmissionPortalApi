@@ -9,5 +9,7 @@ namespace AdmissionPortal.Infra.Data.Interface
         public bool IsEmailAlreadyRegistered(string emailAddress);
         public Task<bool> IsValidUserName(string username);
         public Task<string> GetPassword(string username);
+        public Task<bool> IsRegistrationAvailable();
+        public TblMstAutoNotification GetRegistrationMessage();
     }
 }
