@@ -43,6 +43,7 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
             userDetails.InsertedBy = command.InsertedBy;
             userDetails.InsertedDateTime = DateTime.UtcNow;
+            //userDetails.UserType = need to ask 
             var userId= await _applicationUserRepository.AddUser(userDetails);
             var data = _applicationUserRepository.GetRegistrationMessage();
             StringBuilder sb= new StringBuilder(data.EmailMessageEng);

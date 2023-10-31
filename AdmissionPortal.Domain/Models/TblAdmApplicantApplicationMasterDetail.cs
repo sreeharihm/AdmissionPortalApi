@@ -13,10 +13,6 @@ public partial class TblAdmApplicantApplicationMasterDetail
 
     public DateTime? ApplicationStatusUpdateDate { get; set; }
 
-    public string? ApplicationStep { get; set; }
-
-    public DateTime? ApplicationStepDate { get; set; }
-
     public string? ApplicationNextStep { get; set; }
 
     public DateTime? ApplicationNextStepDate { get; set; }

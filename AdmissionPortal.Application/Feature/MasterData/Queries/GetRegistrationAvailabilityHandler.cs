@@ -1,5 +1,4 @@
-﻿using AdmissionPortal.Domain.Dto;
-using AdmissionPortal.Infra.Data.Interface;
+﻿using AdmissionPortal.Infra.Data.Interface;
 using MediatR;
 
 namespace AdmissionPortal.Application.Feature.MasterData.Queries

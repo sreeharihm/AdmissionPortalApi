@@ -15,6 +15,7 @@ namespace AdmissionPortal.Infra.Data
 
             services.AddScoped<ICountryMasterRepository, CountryMasterRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddScoped<ICourseRepository, CourseRepository>();
         }
     }
 }
