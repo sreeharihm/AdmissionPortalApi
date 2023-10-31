@@ -1,4 +1,5 @@
-﻿using AdmissionPortal.Application.Feature.Registration.Commands;
+﻿using AdmissionPortal.Application.Extensions;
+using AdmissionPortal.Application.Feature.Registration.Commands;
 using AdmissionPortal.Application.Helpers;
 using AdmissionPortal.Application.Interface;
 using AdmissionPortal.Domain.Dto;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
 {
-    internal class CreateApplicationUserHandler : IRequestHandler<CreateApplicationUserCommand, int>
+    internal class CreateApplicationUserHandler : IRequestHandler<CreateApplicationUserCommand, UserDto>
     {
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IEmailSender _emailSender;
@@ -20,9 +21,10 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             _applicationUserRepository = applicationUserRepository;
             _emailSender = emailSender; 
         }
-        public async Task<int> Handle(CreateApplicationUserCommand command, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(CreateApplicationUserCommand command, CancellationToken cancellationToken)
         {
             var userDetails = new TblSsaApplicationUser();
+            var response = new UserDto();
             userDetails.NationalId = command.NationalId;
             userDetails.Nationality = command.Nationality;
             userDetails.EmailAddress = command.EmailAddress;
@@ -37,12 +39,18 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             if (!string.IsNullOrEmpty(command.FatherNameLocal)) userDetails.FatherNameLocal = command.FatherNameLocal;
             if (!string.IsNullOrEmpty(command.GrandFatherNameLocal)) userDetails.GrandFatherNameLocal = command.GrandFatherNameLocal;
             userDetails.UserName = command.EmailAddress;
-            string password = command.Mobile.Substring(command.Mobile.Length - 4) + command.NationalId.Substring(command.NationalId.Length - 4);
-            userDetails.UserPassword = Encryption.Base64Encode(password); 
+            var activationCode = command.NationalId.GetLastFourCharacters() + command.Mobile.GetLastFourCharacters();
+            userDetails.UserPassword = activationCode.Base64Encode();
             userDetails.TermsAcknowledged = command.TermsAcknowledged;
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
             userDetails.InsertedBy = command.InsertedBy;
             userDetails.InsertedDateTime = DateTime.UtcNow;
+            response.UserId = await _applicationUserRepository.AddUser(userDetails);
+            //Merge conflict 
+            //response.Message = "User registration succesfull";
+            //response.ActivationCode = activationCode;
+            //return response;
+
             //userDetails.UserType = need to ask 
             var userId= await _applicationUserRepository.AddUser(userDetails);
             var data = _applicationUserRepository.GetRegistrationMessage();
