@@ -31,6 +31,8 @@ public partial class TblAdmMasterAdmissionCriteria
 
     public DateTime? EffectiveTo { get; set; }
 
+    public bool? VerifyWithExternal { get; set; }
+
     public int InsertedBy { get; set; }
 
     public DateTime InsertedDateTime { get; set; }

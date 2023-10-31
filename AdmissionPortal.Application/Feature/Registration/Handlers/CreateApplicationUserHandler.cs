@@ -1,20 +1,25 @@
 ﻿using AdmissionPortal.Application.Extensions;
 using AdmissionPortal.Application.Feature.Registration.Commands;
 using AdmissionPortal.Application.Helpers;
+using AdmissionPortal.Application.Interface;
 using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data.Interface;
 using AdmissionPortal.Infra.Data.Models;
 using MediatR;
+using NETCore.MailKit.Core;
+using System.Text;
 
 namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
 {
     internal class CreateApplicationUserHandler : IRequestHandler<CreateApplicationUserCommand, UserDto>
     {
         private readonly IApplicationUserRepository _applicationUserRepository;
+        private readonly IEmailSender _emailSender;
 
-        public CreateApplicationUserHandler(IApplicationUserRepository applicationUserRepository)
+        public CreateApplicationUserHandler(IApplicationUserRepository applicationUserRepository, IEmailSender emailSender)
         {
             _applicationUserRepository = applicationUserRepository;
+            _emailSender = emailSender; 
         }
         public async Task<UserDto> Handle(CreateApplicationUserCommand command, CancellationToken cancellationToken)
         {
@@ -41,9 +46,21 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             userDetails.InsertedBy = command.InsertedBy;
             userDetails.InsertedDateTime = DateTime.UtcNow;
             response.UserId = await _applicationUserRepository.AddUser(userDetails);
-            response.Message = "User registration succesfull";
-            response.ActivationCode = activationCode;
-            return response;
+            //Merge conflict 
+            //response.Message = "User registration succesfull";
+            //response.ActivationCode = activationCode;
+            //return response;
+
+            //userDetails.UserType = need to ask 
+            var userId= await _applicationUserRepository.AddUser(userDetails);
+            var data = _applicationUserRepository.GetRegistrationMessage();
+            StringBuilder sb= new StringBuilder(data.EmailMessageEng);
+            sb.Replace("<%UserName%>", userDetails.EmailAddress);
+            sb.Replace("<%Password%>", password);
+            var message = new Message(userDetails.EmailAddress, "Welcome",sb.ToString());
+
+            _emailSender.SendEmail(message);
+            return userId;
         }
     }
 }

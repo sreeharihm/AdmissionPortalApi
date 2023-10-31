@@ -11,5 +11,7 @@ namespace AdmissionPortal.Infra.Data.Interface
         public Task<string> GetPassword(string username);
         Task<bool> IsValidActivationCode(string activationCode);
         Task<bool> ResetPassword(string emailId, string password);
+        public Task<bool> IsRegistrationAvailable();
+        public TblMstAutoNotification GetRegistrationMessage();
     }
 }

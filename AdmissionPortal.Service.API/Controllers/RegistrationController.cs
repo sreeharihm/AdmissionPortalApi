@@ -1,4 +1,5 @@
-﻿using AdmissionPortal.Application.Feature.Registration.Commands;
+﻿using AdmissionPortal.Application.Feature.MasterData.Queries;
+using AdmissionPortal.Application.Feature.Registration.Commands;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,6 @@ namespace AdmissionPortal.Service.API.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest,validation.Errors);
             }
             return Ok(await _mediator.Send(model));
-        }
+        }        
     }
 }

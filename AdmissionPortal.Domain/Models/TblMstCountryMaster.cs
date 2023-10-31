@@ -25,6 +25,8 @@ public partial class TblMstCountryMaster
 
     public string? CountryIdstartsNo { get; set; }
 
+    public bool? IslocalCountry { get; set; }
+
     public int? InsertBy { get; set; }
 
     public DateTime? InsertDateTime { get; set; }

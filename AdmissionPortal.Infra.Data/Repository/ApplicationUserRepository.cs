@@ -1,5 +1,6 @@
 ﻿using AdmissionPortal.Infra.Data.Interface;
 using AdmissionPortal.Infra.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdmissionPortal.Infra.Data.Repository
 {
@@ -35,6 +36,11 @@ namespace AdmissionPortal.Infra.Data.Repository
                                                                 .Select(c => c.UserPassword)
                                                                 .FirstOrDefault();
             return password;
+        }
+        public async Task<bool> IsRegistrationAvailable() => await _sisContext.TblAdmByTermAdmissionSchedules.AnyAsync(x => x.StartDateTime <= DateTime.Now && x.ExtenssionEndDateTime >= DateTime.Now);
+        public TblMstAutoNotification GetRegistrationMessage()
+        {
+            return _sisContext.TblMstAutoNotifications.First(x => x.AutoNotificationRecId == 1);
         }
 
     }

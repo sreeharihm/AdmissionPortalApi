@@ -77,6 +77,14 @@ public partial class TblAdmApplicantApplicationMaster
 
     public int? ConfirmedMajor { get; set; }
 
+    public string? EmailOtp { get; set; }
+
+    public bool? EmailVerified { get; set; }
+
+    public string? MobileOtp { get; set; }
+
+    public bool? MobileVerified { get; set; }
+
     public int InsertedBy { get; set; }
 
     public DateTime InsertedDateTime { get; set; }

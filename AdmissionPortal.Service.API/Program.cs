@@ -1,5 +1,6 @@
 using AdmissionPortal.Application;
 using AdmissionPortal.Application.Feature.Registration.Validator;
+using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data;
 using FluentValidation.AspNetCore;
 
@@ -28,8 +29,12 @@ builder.Services.AddFluentValidation(conf =>
     conf.RegisterValidatorsFromAssembly(typeof(CreateApplicationUserValidator).Assembly);
     conf.AutomaticValidationEnabled = false;
 });
-var app = builder.Build();
 
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();

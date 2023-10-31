@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdmissionPortal.Infra.Data.Models;
 
@@ -96,6 +98,8 @@ public partial class SisContext : DbContext
     public virtual DbSet<TblMstCountryMaster> TblMstCountryMasters { get; set; }
 
     public virtual DbSet<TblMstDegreeTypeMaster> TblMstDegreeTypeMasters { get; set; }
+
+    public virtual DbSet<TblMstEducationType> TblMstEducationTypes { get; set; }
 
     public virtual DbSet<TblMstErrorMessageMaster> TblMstErrorMessageMasters { get; set; }
 
@@ -289,6 +293,10 @@ public partial class SisContext : DbContext
             entity.Property(e => e.DeclerationCompletedDate).HasColumnType("datetime");
             entity.Property(e => e.DegreeTypeRecId).HasColumnName("DegreeTypeRecID");
             entity.Property(e => e.EducationalDataCompletedDate).HasColumnType("datetime");
+            entity.Property(e => e.EmailOtp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("EmailOTP");
             entity.Property(e => e.ExamScheduledDate).HasColumnType("datetime");
             entity.Property(e => e.ExamScoreDate).HasColumnType("datetime");
             entity.Property(e => e.ExamScoreUpdatedByDate).HasColumnType("datetime");
@@ -299,6 +307,10 @@ public partial class SisContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.LastUpdatedDateTime).HasColumnType("datetime");
+            entity.Property(e => e.MobileOtp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MobileOTP");
             entity.Property(e => e.PersonalDataCompletedDate).HasColumnType("datetime");
             entity.Property(e => e.PreferenceDataCompletedDate).HasColumnType("datetime");
             entity.Property(e => e.StudentId)
@@ -356,10 +368,6 @@ public partial class SisContext : DbContext
             entity.Property(e => e.ApplicationRecId).HasColumnName("ApplicationRecID");
             entity.Property(e => e.ApplicationStatusRecId).HasColumnName("ApplicationStatusRecID");
             entity.Property(e => e.ApplicationStatusUpdateDate).HasColumnType("datetime");
-            entity.Property(e => e.ApplicationStep)
-                .HasMaxLength(150)
-                .IsUnicode(false);
-            entity.Property(e => e.ApplicationStepDate).HasColumnType("datetime");
             entity.Property(e => e.InsertedDateTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -624,9 +632,6 @@ public partial class SisContext : DbContext
             entity.Property(e => e.CriteriaGroupRecId).HasColumnName("CriteriaGroupRecID");
             entity.Property(e => e.CriteriaLocalName).HasMaxLength(255);
             entity.Property(e => e.CriteriaLocalRemarks).HasMaxLength(255);
-            entity.Property(e => e.CriteriaStatus)
-                .HasMaxLength(255)
-                .IsUnicode(false);
             entity.Property(e => e.CriteriaType).HasMaxLength(255);
             entity.Property(e => e.CriteriaTypeRecId).HasColumnName("CriteriaTypeRecID");
             entity.Property(e => e.CriteriasMasterRecId).HasColumnName("CriteriasMasterRecID");
@@ -1308,6 +1313,28 @@ public partial class SisContext : DbContext
                 .HasColumnName("MOHECode");
         });
 
+        modelBuilder.Entity<TblMstEducationType>(entity =>
+        {
+            entity.HasKey(e => e.EducationTypeRecId);
+
+            entity.ToTable("tbl_MST_EducationType");
+
+            entity.Property(e => e.EducationTypeCode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.EducationTypeEngName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.EducationTypeLocalName).HasMaxLength(100);
+            entity.Property(e => e.EducationTypeStatus)
+                .IsRequired()
+                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.InsertedDateTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.LastUpdatedDateTime).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<TblMstErrorMessageMaster>(entity =>
         {
             entity.HasKey(e => e.ErrorMessageRecId);
@@ -1414,6 +1441,9 @@ public partial class SisContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.InstructionsEng).IsUnicode(false);
+            entity.Property(e => e.InstructionsType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.LastUpdatedDateTime).HasColumnType("datetime");
         });
 
@@ -1902,7 +1932,7 @@ public partial class SisContext : DbContext
         {
             entity
                 .HasNoKey()
-                .ToTable("tbl_MST_StudyCenterMaster$");
+                .ToTable("tbl_MST_StudyCenterMaster");
 
             entity.Property(e => e.CityRecId).HasColumnName("CityRecID");
             entity.Property(e => e.InsertedDateTime).HasColumnType("datetime");

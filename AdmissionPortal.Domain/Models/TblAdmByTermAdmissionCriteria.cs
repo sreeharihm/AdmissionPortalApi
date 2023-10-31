@@ -45,7 +45,11 @@ public partial class TblAdmByTermAdmissionCriteria
 
     public int? CriteriaValidityDays { get; set; }
 
-    public string? CriteriaStatus { get; set; }
+    public bool? CriteriaStatus { get; set; }
+
+    public bool? CriteriaMandatory { get; set; }
+
+    public bool? VerifyWithExternal { get; set; }
 
     public int? InsertedBy { get; set; }
 

@@ -11,6 +11,8 @@ public partial class TblMstInstruction
 
     public string? InstructionsLocal { get; set; }
 
+    public string? InstructionsType { get; set; }
+
     public int? InsertedBy { get; set; }
 
     public DateTime? InsertedDateTime { get; set; }
