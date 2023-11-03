@@ -1,30 +1,27 @@
 ﻿using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdmissionPortal.Infra.Data.Interface
 {
     public interface IApplicantRepository
     {
+        Task<string> GetEmailOtp(int applicationRecId);
+        Task<string> GetMobileOtp(int applicationRecId);
         Task<ApplicantDto> CreateApplicationId(TblAdmApplicantApplicationMaster applicantApplicationMaster);
         Task GetApplicationDetails();
         Task<List<InstructionsDto>> GetInstructions();
-        Task GetPersonalDetails();
-        Task UpSertPersonalDetails();
-        Task GetAddressDetails();
-        Task UpSertAddressDetails();
+        Task<ApplicantPersonalDetailsDto> GetPersonalDetails(int userId);
+        Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId);
+        Task GetAddressDetails(int applicationRecId, string applicationNumber);
+        Task UpSertAddressDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation);
         Task GetEducationDetails();
         Task UpSertEducationDetails();
-        Task GetAdmissionCriteria();
+        Task GetAdmissionCriteria(int applicationRecId, string applicationNumber);
         Task UpsertAdmissionCriteria();
-        Task GetPreference();
-        Task UpsertPreference();
-        Task GetAdditionalDetails();
-        Task UpsertAdditionalDetails();
+        Task<List<ApplicantPreferenceDto>> GetPreference(int applicationRecId, string applicationNumber);
+        Task UpsertPreference(TblAdmApplicantPreferenceInformation applicantPreferenceInformation);
+        Task<List<AdmissionQuestion>> GetAdditionalDetails(int applicationRecId, string applicationNumber);
+        Task<bool> UpsertAdditionalDetails(TblAdmApplicantAdmissionQuestion applicationQuestion, int userId);
         Task GetReviewDetails();
     }
 }

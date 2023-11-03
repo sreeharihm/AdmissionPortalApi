@@ -1,9 +1,14 @@
-﻿namespace AdmissionPortal.Domain.Dto
+﻿using AdmissionPortal.Domain.Dto;
+using MediatR;
+
+namespace AdmissionPortal.Application.Feature.Applicant.Commands
 {
-    public class ApplicantPersonalDetailsDto
+    public class CreateApplicantPersonalDetailsCommand : IRequest<ApplicantDto>
     {
+        public string ApplicationNumber { get; set; }
+        public int ApplicationRecId { get; set; }
         public int UserId { get; set; }
-        public string NationalId { get; set; }
+        public int NationalId { get; set; }
         public string FirstNameEng { get; set; }
         public string LastNameEng { get; set; }
         public string FirstNameLocal { get; set; }

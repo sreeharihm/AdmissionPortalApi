@@ -13,7 +13,8 @@ namespace AdmissionPortal.Application.Feature.Applicant.Queries
         }
         public async Task<ApplicantPersonalDetailsDto> Handle(GetApplicantPersonalDetailsQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result= await _applicationRepository.GetPersonalDetails(request.UserId);
+            return result;
         }
     }
 }

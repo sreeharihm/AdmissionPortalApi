@@ -4,5 +4,6 @@
     {
         public string ApplicationNumber { get; set; }
         public int ApplicationRecId { get; set; }
+        public string Message { get; set; }
     }
 }
