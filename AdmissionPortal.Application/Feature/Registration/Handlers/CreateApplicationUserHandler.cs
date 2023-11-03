@@ -46,21 +46,18 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             userDetails.InsertedBy = command.InsertedBy;
             userDetails.InsertedDateTime = DateTime.UtcNow;
             response.UserId = await _applicationUserRepository.AddUser(userDetails);
-            //Merge conflict 
-            //response.Message = "User registration succesfull";
-            //response.ActivationCode = activationCode;
-            //return response;
 
             //userDetails.UserType = need to ask 
-            var userId= await _applicationUserRepository.AddUser(userDetails);
             var data = _applicationUserRepository.GetRegistrationMessage();
             StringBuilder sb= new StringBuilder(data.EmailMessageEng);
             sb.Replace("<%UserName%>", userDetails.EmailAddress);
-            sb.Replace("<%Password%>", password);
+            sb.Replace("<%Password%>", userDetails.UserPassword);
             var message = new Message(userDetails.EmailAddress, "Welcome",sb.ToString());
 
             _emailSender.SendEmail(message);
-            return userId;
+            response.Message = "User registration succesfull";
+            response.ActivationCode = activationCode;
+            return response;
         }
     }
 }
