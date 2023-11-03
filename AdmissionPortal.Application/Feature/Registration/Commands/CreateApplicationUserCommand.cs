@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using AdmissionPortal.Domain.Dto;
+using MediatR;
 
 namespace AdmissionPortal.Application.Feature.Registration.Commands
 {
-    public class CreateApplicationUserCommand : IRequest<int>
+    public class CreateApplicationUserCommand : IRequest<UserDto>
     {
         public bool IsArabCountry { get; set; }
         public string? Nationality { get; set; }

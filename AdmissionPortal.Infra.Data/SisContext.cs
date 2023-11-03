@@ -179,7 +179,6 @@ public partial class SisContext : DbContext
 
     public virtual DbSet<TblSsaUserRolesCapabilityControl> TblSsaUserRolesCapabilityControls { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TblAdmAdmissionLead>(entity =>

@@ -13,7 +13,7 @@ namespace AdmissionPortal.Application.Feature.Registration.Validator
         {
             _applicationUserRepository = applicationUserRepository;
 
-            RuleFor(p => p.Nationality).NotEmpty();
+            RuleFor(p => p.Nationality).NotEmpty().When(x=>x.IsArabCountry==false);
             RuleFor(p => p.NationalId).NotEmpty();
             RuleFor(p => p.FirstNameEng).NotEmpty().Matches("^[a-zA-Z ]*$").WithMessage("Only letters are allowed");
             RuleFor(p => p.LastNameEng).NotEmpty().Matches("^[a-zA-Z ]*$").WithMessage("Only letters are allowed"); 
