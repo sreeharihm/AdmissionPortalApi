@@ -16,8 +16,8 @@ namespace AdmissionPortal.Infra.Data.Interface
         Task UpSertAddressDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation);
         Task GetEducationDetails();
         Task UpSertEducationDetails();
-        Task GetAdmissionCriteria(int applicationRecId, string applicationNumber);
-        Task UpsertAdmissionCriteria();
+        Task<List<AdmissionCriteriaDto>> GetAdmissionCriteria(int applicationRecId, string applicationNumber);
+        Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria);
         Task<List<ApplicantPreferenceDto>> GetPreference(int applicationRecId, string applicationNumber);
         Task UpsertPreference(TblAdmApplicantPreferenceInformation applicantPreferenceInformation);
         Task<List<AdmissionQuestion>> GetAdditionalDetails(int applicationRecId, string applicationNumber);

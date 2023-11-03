@@ -1,9 +1,9 @@
 ﻿using AdmissionPortal.Domain.Dto;
 using MediatR;
 
-namespace AdmissionPortal.Application.Feature.Course.Queries
+namespace AdmissionPortal.Application.Feature.Applicant.Queries
 {
-    public class GetProgramPreferencesQuery : IRequest<List<ApplicantPreferenceDto>>
+    public class GetAdmissionCriteriaQuery : IRequest<List<AdmissionCriteriaDto>>
     {
         public int ApplicationRecId { get; set; }
         public string ApplicationNumber { get; set; }

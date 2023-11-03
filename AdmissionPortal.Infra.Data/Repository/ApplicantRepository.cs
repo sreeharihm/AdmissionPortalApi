@@ -93,16 +93,31 @@ namespace AdmissionPortal.Infra.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task GetAdmissionCriteria(int applicationRecId, string applicationNumber)
+        public async Task<List<AdmissionCriteriaDto>> GetAdmissionCriteria(int applicationRecId, string applicationNumber)
         {
-//            Select CriteriaLocalName, CriteriaTypeRecID, CriteriaType
-//, CriteriaEngName, CriteriaMinimum, CriteriaMaxmum, CriteriaWeightage, CriteriaGroupRecID
-//, CriteriaGender, CriteriaForCitizen, Condition, CriteriaForNonCitizen, Condition, CriteriaLocalRemarks, CriteriaEngRemarks
-//from tbl_ADM_ByTerm_AdmissionCriterias
-            //var data = from asm in _sisContext.TblAdmApplicantApplicationMasterDetails
-            //           join ac in _sisContext.TblAdmByTermAdmissionCriterias
-            //           on asm.
-            throw new NotImplementedException();
+            return await (from asm in _sisContext.TblAdmApplicantApplicationMasters
+                          join ac in _sisContext.TblAdmByTermAdmissionCriterias
+                          on asm.AdmissionTypeRecId equals ac.AdmissionScheduleRecId
+                          where asm.ApplicationRecId == applicationRecId && asm.ApplicationNumber == applicationNumber
+                          select new AdmissionCriteriaDto
+                          {
+                              CriteriaLocalName = ac.CriteriaLocalName,
+                              CriteriaTypeRecId = ac.CriteriaTypeRecId.Value,
+                              CriteriaType = ac.CriteriaType,
+                              CriteriaEngName = ac.CriteriaEngName,
+                              CriteriaMinimum = ac.CriteriaMinimum.Value,
+                              CriteriaMaxmum = ac.CriteriaMaxmum.Value,
+                              CriteriaWeightage = ac.CriteriaWeightage.Value,
+                              CriteriaGroupRecId = ac.CriteriaGroupRecId.Value,
+                              CriteriaGender = ac.CriteriaGender.Value,
+                              CriteriaForCitizen = ac.CriteriaForCitizen.Value,
+                              Condition = ac.Condition,
+                              CriteriaForNonCitizen = ac.CriteriaForNonCitizen.Value,
+                              CriteriaLocalRemarks = ac.CriteriaLocalRemarks,
+                              CriteriaEngRemarks = ac.CriteriaEngRemarks
+                          }
+                       ).ToListAsync();
+
         }
 
         public Task GetApplicationDetails()
@@ -221,9 +236,19 @@ namespace AdmissionPortal.Infra.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task UpsertAdmissionCriteria()
+        public async Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria)
         {
-            throw new NotImplementedException();
+            var criteriaExists = await _sisContext.TblAdmApplicantAdmissionCriterias.FirstAsync(x => x.ApplicationRecId == applicantAdmissionCriteria.ApplicationRecId);
+            if (criteriaExists != null)
+            {
+                applicantAdmissionCriteria.InsertedDateTime = DateTime.Now;
+            }
+            else
+            {
+                applicantAdmissionCriteria.LastUpdatedDateTime = DateTime.Now;
+                await _sisContext.TblAdmApplicantAdmissionCriterias.AddAsync(applicantAdmissionCriteria);
+            }
+            await _sisContext.SaveChangesAsync();
         }
 
         public Task UpSertEducationDetails()

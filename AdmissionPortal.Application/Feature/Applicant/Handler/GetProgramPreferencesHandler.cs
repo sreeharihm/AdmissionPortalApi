@@ -1,8 +1,9 @@
-﻿using AdmissionPortal.Domain.Dto;
+﻿using AdmissionPortal.Application.Feature.Applicant.Queries;
+using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data.Interface;
 using MediatR;
 
-namespace AdmissionPortal.Application.Feature.Course.Queries
+namespace AdmissionPortal.Application.Feature.Applicant.Handler
 {
     public class GetProgramPreferencesHandler : IRequestHandler<GetProgramPreferencesQuery, List<ApplicantPreferenceDto>>
     {

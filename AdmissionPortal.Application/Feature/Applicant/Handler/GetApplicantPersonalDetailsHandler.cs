@@ -1,8 +1,9 @@
-﻿using AdmissionPortal.Domain.Dto;
+﻿using AdmissionPortal.Application.Feature.Applicant.Queries;
+using AdmissionPortal.Domain.Dto;
 using AdmissionPortal.Infra.Data.Interface;
 using MediatR;
 
-namespace AdmissionPortal.Application.Feature.Applicant.Queries
+namespace AdmissionPortal.Application.Feature.Applicant.Handler
 {
     public class GetApplicantPersonalDetailsHandler : IRequestHandler<GetApplicantPersonalDetailsQuery, ApplicantPersonalDetailsDto>
     {
@@ -13,7 +14,7 @@ namespace AdmissionPortal.Application.Feature.Applicant.Queries
         }
         public async Task<ApplicantPersonalDetailsDto> Handle(GetApplicantPersonalDetailsQuery request, CancellationToken cancellationToken)
         {
-            var result= await _applicationRepository.GetPersonalDetails(request.UserId);
+            var result = await _applicationRepository.GetPersonalDetails(request.UserId);
             return result;
         }
     }
