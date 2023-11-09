@@ -25,12 +25,7 @@ namespace AdmissionPortal.Application.Feature.Registration.Validator
             RuleFor(p => p.GrandFatherNameLocal).NotEmpty().Matches("^[ء-ي]+").WithMessage("Only arabic letters are allowed").When(x => x.IsArabCountry);
             RuleFor(p => p.Gender).NotEmpty();
             RuleFor(p => p.DateofBirth).Must(BeAValidDate).WithMessage("Invalid date of birth");
-            RuleFor(p => p.Mobile).NotEmpty().PhoneNumber().Must(BeUniqueMobile).WithMessage("There is an account already registered with this mobile.Try to login or Reset the password");
-            RuleFor(p => p.EmailAddress).NotEmpty().EmailAddress().Must(BeUniqueEmail).WithMessage("There is an account already registered with this email.Try to login or Reset the password"); ;
-        }
-        private bool BeUniqueMobile(string mobile) => !_applicationUserRepository.IsMobileAlreadyRegistered(mobile);
-        private bool BeAValidDate(DateTime date) => !date.Equals(default(DateTime));
-        private bool BeUniqueEmail(string email) => !_applicationUserRepository.IsEmailAlreadyRegistered(email);       
-
+                }
+        private bool BeAValidDate(DateTime date) => !date.Equals(default(DateTime));      
     }
 }

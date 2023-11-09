@@ -17,11 +17,8 @@ namespace AdmissionPortal.Application.Feature.Registration.Commands
         public string? GrandFatherNameLocal { get; set; }
         public string? LastNameLocal { get; set; }
         public bool? Gender { get; set; }
-        public DateTime DateofBirth { get; set; }
-        public string? EmailAddress { get; set; }
-        public string? Mobile { get; set; }
-        public bool? GuidelinesAcknowledged { get; set; } = true;
-        public bool? TermsAcknowledged { get; set; } = true;
+        public DateTime DateofBirth { get; set; }      
+        public bool? GuidelinesAcknowledged { get; set; } = true;      
         public int? InsertedBy { get; set; } = 1;
         public DateTime InsertedDateTime { get; set; }
 

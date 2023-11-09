@@ -1,10 +1,12 @@
 ﻿using AdmissionPortal.Application.Feature.Course.Queries;
 using AdmissionPortal.Application.Feature.MasterData.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdmissionPortal.Service.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
@@ -14,7 +16,7 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             _mediator = mediator;
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> GetCourse(CancellationToken cancellationToken)
         {
