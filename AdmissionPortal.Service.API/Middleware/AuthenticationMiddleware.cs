@@ -5,6 +5,7 @@ using AdmissionPortal.Service.API;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace AdmissionPortal.Service.API
@@ -32,9 +33,10 @@ namespace AdmissionPortal.Service.API
                 }
                 else
                 {
-                    if (await IsValidUser(loginDetails.Username, loginDetails.Password, applicationUserRepository))
+                    int userId =await IsValidUser(loginDetails.Username, loginDetails.Password, applicationUserRepository);
+                    if (userId > 0)
                     {
-                        var token = GenerateJwtToken(loginDetails.Username);
+                        var token = GenerateJwtToken(loginDetails.Username, userId);
                         httpContext.Request.Headers.Add("Authorization", $"Bearer {token}");
                     }
                     else
@@ -49,26 +51,30 @@ namespace AdmissionPortal.Service.API
             }
         }
 
-        private async Task<bool> IsValidUser(string username, string password, IApplicationUserRepository applicationUserRepository)
+        private async Task<int> IsValidUser(string username, string password, IApplicationUserRepository applicationUserRepository)
         {
-            bool isValidUser = await applicationUserRepository.IsValidUserName(username);
+            int userId = await applicationUserRepository.IsValidUserName(username);
             string dbPassword = await applicationUserRepository.GetPassword(username);
             bool isValidpassword = dbPassword.Base64Decode() == password;
-            return isValidUser && isValidpassword;
+            if (userId > 0 && isValidpassword)
+                return userId;
+            return 0;
         }
 
-        private string GenerateJwtToken(string username)
+        private string GenerateJwtToken(string username, int userId)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+            var customClaims = new[]
+            {
+                new Claim("Username", username),
+                new Claim("UserId", userId.ToString()),
+            };
+            var claimsIdentity = new ClaimsIdentity(customClaims);
             var token = new JwtSecurityToken(
                 _configuration["JwtSettings:Issuer"],
                 _configuration["JwtSettings:Audience"],
-                new[]
-                {
-                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, username),
-                },
+                 claimsIdentity.Claims,
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: credentials
             );

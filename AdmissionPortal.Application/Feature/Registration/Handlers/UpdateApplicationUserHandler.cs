@@ -15,14 +15,17 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
     {
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IEmailSender _emailSender;
+        private readonly ISMSSender _smsSender;
 
-        public UpdateApplicationUserHandler(IApplicationUserRepository applicationUserRepository, IEmailSender emailSender)
+        public UpdateApplicationUserHandler(IApplicationUserRepository applicationUserRepository, IEmailSender emailSender,ISMSSender smsSender)
         {
             _applicationUserRepository = applicationUserRepository;
             _emailSender = emailSender; 
+            _smsSender = smsSender;
         }
         public async Task<UserDto> Handle(UpdateApplicationUserCommand command, CancellationToken cancellationToken)
         {
+            bool cc= await _smsSender.SendSmsAsync();
             var userDetails = new TblSsaApplicationUser();
             var response = new UserDto();
             userDetails.UserId = command.UserId;
