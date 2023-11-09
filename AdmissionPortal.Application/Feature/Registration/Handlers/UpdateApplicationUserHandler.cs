@@ -15,14 +15,17 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
     {
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IEmailSender _emailSender;
+        private readonly ISMSSender _smsSender;
 
-        public UpdateApplicationUserHandler(IApplicationUserRepository applicationUserRepository, IEmailSender emailSender)
+        public UpdateApplicationUserHandler(IApplicationUserRepository applicationUserRepository, IEmailSender emailSender,ISMSSender smsSender)
         {
             _applicationUserRepository = applicationUserRepository;
             _emailSender = emailSender; 
+            _smsSender = smsSender;
         }
         public async Task<UserDto> Handle(UpdateApplicationUserCommand command, CancellationToken cancellationToken)
         {
+            bool cc= await _smsSender.SendSmsAsync();
             var userDetails = new TblSsaApplicationUser();
             var response = new UserDto();
             userDetails.UserId = command.UserId;
@@ -41,7 +44,7 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
                 sb.Replace("<%UserName%>", userDetails.EmailAddress);
                 sb.Replace("<%Password%>", activationCode);
                 var message = new Message(userDetails.EmailAddress, "Welcome", sb.ToString());
-                _emailSender.SendEmail(message);
+                _emailSender.SendEmailAsync(message);
                 response.Message = "User registration succesfull";
                 response.ActivationCode = activationCode;
             }

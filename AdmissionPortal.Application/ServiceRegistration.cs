@@ -11,6 +11,7 @@ namespace AdmissionPortal.Application
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<ISMSSender,SmsSender>();
         }
     }
 }
