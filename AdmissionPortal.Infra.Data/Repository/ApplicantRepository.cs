@@ -251,10 +251,6 @@ namespace AdmissionPortal.Infra.Data.Repository
             await _sisContext.SaveChangesAsync();
         }
 
-        public Task UpSertEducationDetails()
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId)
         {
@@ -302,6 +298,78 @@ namespace AdmissionPortal.Infra.Data.Repository
             {
                 applicantPreferenceInformation.InsertDateTime = DateTime.Now;
                 await _sisContext.TblAdmApplicantPreferenceInformations.AddAsync(applicantPreferenceInformation);
+            }
+            await _sisContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ApplicantCheckList>> GetAdmissionCheckList(int applicationRecId, string applicationNumber, int userId)
+        {
+            return await (from asm in _sisContext.TblAdmApplicantApplicationMasters
+                          join ac in _sisContext.TblAdmByTermAdmissionChecklists
+                          on asm.AdmissionTypeRecId equals ac.AdmissionScheduleRecId
+                          join apm in _sisContext.TblAdmApplicantPersonalInformations
+                          on asm.ApplicationRecId equals userId
+                          where
+                          asm.ApplicationRecId == applicationRecId &&
+                          asm.ApplicationNumber == applicationNumber &&
+                          apm.Gender == ac.ChecklistGender
+                          select new ApplicantCheckList
+                          {
+                              ChecklistByTermRecId = ac.ChecklistByTermRecId,
+                              ChecklistRecId = ac.ChecklistRecId.Value,
+                              ChecklistEngName = ac.ChecklistEngName,
+                              ChecklistLocalName = ac.ChecklistLocalName,
+                              ChecklistNotesEng = ac.ChecklistNotesEng,
+                              ChecklistNotesLocal = ac.ChecklistNotesLocal,
+                              ChecklistIsForLocals = ac.ChecklistIsForLocals.Value,
+                              ChecklistIsForNonLocals = ac.ChecklistIsForNonLocals.Value,
+                              DisplayOrder = ac.DisplayOrder.Value,
+                              IsLocal = apm.CountryId == 156
+                          }
+            ).ToListAsync();
+        }
+
+        public async Task UpsertAdmissionCheckList(TblAdmApplicantChecklist applicantChecklist, int userId)
+        {
+            var isCheckListExisit = await _sisContext.TblAdmApplicantChecklists.FirstOrDefaultAsync(x => x.ApplicationRecId == applicantChecklist.ApplicationRecId && x.ChecklistByTermRecId == applicantChecklist.ChecklistByTermRecId);
+            if (isCheckListExisit != null)
+            {
+                isCheckListExisit.ChecklistAttachments = applicantChecklist.ChecklistAttachments;
+                isCheckListExisit.DisplayOrder = applicantChecklist.DisplayOrder;
+                isCheckListExisit.ChecklistStatus = applicantChecklist.ChecklistStatus;
+                isCheckListExisit.LastUpdatedBy = userId;
+                isCheckListExisit.LastUpdatedDateTime = DateTime.UtcNow;
+            }
+            else
+            {
+                applicantChecklist.InsertedBy = userId;
+                applicantChecklist.InsertedDateTime = DateTime.UtcNow;
+                await _sisContext.TblAdmApplicantChecklists.AddAsync(applicantChecklist);
+            }
+            await _sisContext.SaveChangesAsync();
+        }
+
+        public async Task UpsertEducationDetials(TblAdmApplicantEducationalInformation educationInformation, int userId)
+        {
+            var isEducationExisit = await _sisContext.TblAdmApplicantEducationalInformations.FirstOrDefaultAsync(x => x.ApplicationRecId == educationInformation.ApplicationRecId && x.CertificateType == educationInformation.CertificateType);
+            if (isEducationExisit != null)
+            {
+                isEducationExisit.ExternalCode = educationInformation.ExternalCode;
+                isEducationExisit.CityName = educationInformation.CityName;
+                isEducationExisit.CountryRecId = educationInformation.CountryRecId;
+                isEducationExisit.SchoolName = educationInformation.SchoolName;
+                isEducationExisit.StudyCenterName = educationInformation?.StudyCenterName;
+                isEducationExisit.GradeType = educationInformation?.GradeType;
+                isEducationExisit.GraduationYear = educationInformation?.GraduationYear;
+                isEducationExisit.ProvinceName = educationInformation?.ProvinceName;
+                isEducationExisit.LastUpdatedBy = userId;
+                isEducationExisit.LastUpdatedDateTime = DateTime.Now;
+            }
+            else
+            {
+                educationInformation.InsertedBy = userId;
+                educationInformation.InsertedDateTime = DateTime.Now;
+                await _sisContext.AddAsync(educationInformation);
             }
             await _sisContext.SaveChangesAsync();
         }

@@ -97,5 +97,57 @@ namespace AdmissionPortal.Service.API.Controllers
             }
             return Ok();
         }
+        [HttpGet]
+        [Route("/CheckList")]
+        public async Task<IActionResult> GetApplicantCheckList(GetApplicantCheckListQuery checkListQuery, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(checkListQuery, cancellationToken));
+        }
+
+        [HttpPost]
+        [Route("/CheckList")]
+        public async Task<IActionResult> CreateApplicantCheckList([FromBody] List<CreateApplicantCheckListCommand> detailsCommand, CancellationToken cancellationToken)
+        {
+            foreach (var command in detailsCommand)
+            {
+                await _mediator.Send(command, cancellationToken);
+            }
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("/DropDownDetails")]
+        public async Task<IActionResult> GetEducationDetails(GetApplicantCheckListQuery checkListQuery, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(checkListQuery, cancellationToken));
+        }
+        [HttpPost]
+        [Route("/EducationDetails")]
+        public async Task<IActionResult> CreateApplicantEducationList([FromBody] List<CreateApplicantEducationCommand> detailsCommand, CancellationToken cancellationToken)
+        {
+            foreach (var command in detailsCommand)
+            {
+                await _mediator.Send(command, cancellationToken);
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("/SendEmailOtp")]
+        public async Task<IActionResult> SendEmailOtp([FromBody] CreateApplicantEducationCommand detailsCommand, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(detailsCommand, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("/VerifyEmailOtp")]
+        public async Task<IActionResult> VerifyEmailOtp([FromBody] CreateApplicantEducationCommand detailsCommand, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(detailsCommand, cancellationToken);
+
+            return Ok();
+        }
     }
 }
