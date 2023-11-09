@@ -3,6 +3,7 @@ using AdmissionPortal.Application.Feature.MasterData.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AdmissionPortal.Service.API.Controllers
 {
@@ -20,6 +21,7 @@ namespace AdmissionPortal.Service.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourse(CancellationToken cancellationToken)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             return Ok(await _mediator.Send(new GetCourseQuery()));
         }
 

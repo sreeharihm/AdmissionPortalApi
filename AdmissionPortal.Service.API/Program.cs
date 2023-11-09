@@ -54,6 +54,10 @@ var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")
         .Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfig);
+var smsConfig = builder.Configuration
+        .GetSection("SmsConfiguration")
+        .Get<SmsConfiguration>();
+builder.Services.AddSingleton(smsConfig);
 var app = builder.Build();
 
 app.UseSwagger();

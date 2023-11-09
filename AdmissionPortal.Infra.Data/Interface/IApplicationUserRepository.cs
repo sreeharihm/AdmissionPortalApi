@@ -7,7 +7,7 @@ namespace AdmissionPortal.Infra.Data.Interface
         public Task<int> AddUser(TblSsaApplicationUser applicationUser);
         public bool IsMobileAlreadyRegistered(string mobile);
         public bool IsEmailAlreadyRegistered(string emailAddress);
-        public Task<bool> IsValidUserName(string username);
+        public Task<int> IsValidUserName(string username);
         public Task<string> GetPassword(string username);
         Task<bool> IsValidActivationCode(string activationCode);
         Task<bool> ResetPassword(string emailId, string password);

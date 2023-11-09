@@ -27,8 +27,18 @@ namespace AdmissionPortal.Infra.Data.Repository
         }
         public bool IsEmailAlreadyRegistered(string emailAddress) => _sisContext.TblSsaApplicationUsers.Any(x => x.EmailAddress == emailAddress);
         public bool IsMobileAlreadyRegistered(string mobile) => _sisContext.TblSsaApplicationUsers.Any(x => x.Mobile == mobile);
-        public async Task<bool> IsValidUserName(string username) =>await  _sisContext.TblSsaApplicationUsers.AnyAsync(x => x.UserName == username);
-        public async Task<bool> IsValidActivationCode(string password) =>await _sisContext.TblSsaApplicationUsers.AnyAsync(x => x.UserPassword == password);
+        public async Task<int> IsValidUserName(string username)
+        {
+            if (_sisContext.TblSsaApplicationUsers.Any(x => x.UserName == username))
+            {
+                int userid = _sisContext.TblSsaApplicationUsers.Where(x => x.UserName == username)
+                                                                .Select(c => c.UserId)
+                                                                .FirstOrDefault();
+                return userid;
+            }
+            return 0;
+        }
+        public async Task<bool> IsValidActivationCode(string password) => _sisContext.TblSsaApplicationUsers.Any(x => x.UserPassword == password);
         public async Task<string> GetPassword(string username)
         {
             return await _sisContext.TblSsaApplicationUsers.Where(x => x.UserName == username)
