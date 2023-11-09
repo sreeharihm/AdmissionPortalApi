@@ -513,6 +513,14 @@ public partial class SisContext : DbContext
             entity.Property(e => e.PassportNumber)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.PermanentAddress).HasMaxLength(400);
+            entity.Property(e => e.PermanentCityName).HasMaxLength(150);
+            entity.Property(e => e.PermanentHomeTelephoneNumber).HasMaxLength(150);
+            entity.Property(e => e.PermanentPobox)
+                .HasMaxLength(150)
+                .HasColumnName("PermanentPOBox");
+            entity.Property(e => e.PermanentPostalCode).HasMaxLength(150);
+            entity.Property(e => e.PermanentProvinceName).HasMaxLength(150);
             entity.Property(e => e.Religion).HasDefaultValueSql("((0))");
             entity.Property(e => e.SecondNameEng)
                 .HasMaxLength(100)

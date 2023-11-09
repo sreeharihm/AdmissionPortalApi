@@ -87,5 +87,19 @@ public partial class TblAdmApplicantPersonalInformation
 
     public DateTime? LastUpdatedDateTime { get; set; }
 
+    public int? PermanentCountryId { get; set; }
+
+    public string? PermanentProvinceName { get; set; }
+
+    public string? PermanentCityName { get; set; }
+
+    public string? PermanentHomeTelephoneNumber { get; set; }
+
+    public string? PermanentPostalCode { get; set; }
+
+    public string? PermanentPobox { get; set; }
+
+    public string? PermanentAddress { get; set; }
+
     public virtual TblSsaApplicationUser User { get; set; } = null!;
 }
