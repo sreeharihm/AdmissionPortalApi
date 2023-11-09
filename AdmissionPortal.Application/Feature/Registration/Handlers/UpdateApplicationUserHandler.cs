@@ -44,7 +44,7 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
                 sb.Replace("<%UserName%>", userDetails.EmailAddress);
                 sb.Replace("<%Password%>", activationCode);
                 var message = new Message(userDetails.EmailAddress, "Welcome", sb.ToString());
-                _emailSender.SendEmailAsync(message);
+                _emailSender.SendEmail(message);
                 response.Message = "User registration succesfull";
                 response.ActivationCode = activationCode;
             }
