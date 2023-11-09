@@ -7,9 +7,11 @@ namespace AdmissionPortal.Application.Feature.Applicant.Commands
     {
         public int ApplicationRecId { get; set; }
         public int CheckListbyTermRecId { get; set; }
-        public string CheckListAttachments { get; set; }
-        public bool CheckListStatus { get; set; }
-        public int DisplayOrder { get; set; }
         public int UserId { get; set; }
+        public string Name { get; set; }
+        public bool IsUploaded { get; set; }
+        public string FileName { get; set; }
+        public string FileData { get; set; }
+        public int DisplayOrder { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
             {
                 ApplicationRecId = request.ApplicationRecId,
                 ChecklistByTermRecId = request.CheckListbyTermRecId,
-                ChecklistStatus = request.CheckListStatus,
+                ChecklistStatus = request.IsUploaded,
                 DisplayOrder = request.DisplayOrder,
-                ChecklistAttachments = Encoding.ASCII.GetBytes(request.CheckListAttachments)
+                ChecklistAttachments = Encoding.ASCII.GetBytes(request.FileData)
             };
             await _applicationRepository.UpsertAdmissionCheckList(model, request.UserId);
             return new ApplicantDto();

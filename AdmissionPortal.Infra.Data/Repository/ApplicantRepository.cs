@@ -79,18 +79,31 @@ namespace AdmissionPortal.Infra.Data.Repository
             return admissionQuestions;
         }
 
-        public async Task GetAddressDetails(int applicationRecId, string applicationNumber)
+        public async Task<ApplicantAddressDto> GetAddressDetails(int applicationRecId, string applicationNumber)
         {
-            //var data = from asm in _sisContext.TblAdmApplicantApplicationMasters
-            //           join ac in _sisContext.TblAdmByTermAdmissionChecklists
-            //           on asm.AcademicYearRecId equals ac.AdmissionScheduleRecId
-            //           where asm.ApplicationRecId== applicationRecId && asm.ApplicationNumber == applicationNumber
-            //           orderby ac.DisplayOrder
-            //           select new 
-            //           { 
-
-            //           }
-            throw new NotImplementedException();
+            ApplicantAddressDto dto = new ApplicantAddressDto();
+            dto = await (from asm in _sisContext.TblAdmApplicantApplicationMasters
+                         join ap in _sisContext.TblAdmApplicantPersonalInformations
+                             on asm.UserId equals ap.UserId
+                         where asm.ApplicationRecId == applicationRecId && asm.ApplicationNumber == applicationNumber
+                         select new ApplicantAddressDto
+                         {
+                             ContactAddress = ap.ContactAddress,
+                             ContactCityName = ap.ContactCityName,
+                             ContactCountryId = ap.ContactCountryId.HasValue ? ap.ContactCountryId.Value : 0,
+                             ContactPobox = ap.ContactPobox,
+                             ContactPostalCode = ap.ContactPostalCode,
+                             ContactProvinceName = ap.ContactProvinceName,
+                             ContactHomeTelephoneNumber = ap.ContactHomeTelephoneNumber,
+                             PermanentAddress = ap.PermanentAddress,
+                             PermanentCityName = ap.PermanentCityName,
+                             PermanentCountryId = ap.PermanentCountryId.HasValue ? ap.PermanentCountryId.Value : 0,
+                             PermanentHomeTelephoneNumber = ap.PermanentHomeTelephoneNumber,
+                             PermanentPobox = ap.PermanentPobox,
+                             PermanentPostalCode = ap.PermanentPostalCode,
+                             PermanentProvinceName = ap.PermanentProvinceName
+                         }).FirstOrDefaultAsync();
+            return dto;
         }
 
         public async Task<List<AdmissionCriteriaDto>> GetAdmissionCriteria(int applicationRecId, string applicationNumber)
@@ -130,10 +143,11 @@ namespace AdmissionPortal.Infra.Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<List<InstructionsDto>> GetInstructions()
+        public async Task<List<InstructionsDto>> GetInstructions(string instructionType)
         {
             var result = new List<InstructionsDto>();
             result.AddRange(await (from i in _sisContext.TblMstInstructions
+                                   where i.InstructionsType == instructionType
                                    orderby i.InstructionsRecId
                                    select new InstructionsDto
                                    { InstructionsEng = i.InstructionsEng, InstructionsLocal = i.InstructionsLocal, InstructionId = i.InstructionsRecId }
@@ -231,22 +245,51 @@ namespace AdmissionPortal.Infra.Data.Repository
             return true;
         }
 
-        public Task UpSertAddressDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation)
+        public async Task UpSertAddressDetails(int userId, TblAdmApplicantPersonalInformation applicantPersonalInformation)
         {
-            throw new NotImplementedException();
+            var personalInformationExist = await _sisContext.TblAdmApplicantPersonalInformations.FirstAsync(x => x.UserId == userId);
+            if (personalInformationExist != null)
+            {
+                personalInformationExist.LastUpdatedDateTime = DateTime.Now;
+                personalInformationExist.LastUpdatedBy = userId;
+                personalInformationExist.ContactAddress = applicantPersonalInformation.ContactAddress;
+                personalInformationExist.ContactCityName = applicantPersonalInformation.ContactCityName;
+                personalInformationExist.ContactCountryId = applicantPersonalInformation.ContactCountryId;
+                personalInformationExist.ContactPobox = applicantPersonalInformation.ContactPobox;
+                personalInformationExist.ContactPostalCode = applicantPersonalInformation.ContactPostalCode;
+                personalInformationExist.ContactProvinceName = applicantPersonalInformation.ContactProvinceName;
+                personalInformationExist.ContactHomeTelephoneNumber = applicantPersonalInformation.ContactHomeTelephoneNumber;
+                personalInformationExist.PermanentAddress = applicantPersonalInformation.PermanentAddress;
+                personalInformationExist.PermanentCityName = applicantPersonalInformation.PermanentCityName;
+                personalInformationExist.PermanentCountryId = applicantPersonalInformation.PermanentCountryId;
+                personalInformationExist.PermanentHomeTelephoneNumber = applicantPersonalInformation.PermanentHomeTelephoneNumber;
+                personalInformationExist.PermanentPobox = applicantPersonalInformation.PermanentPobox;
+                personalInformationExist.PermanentPostalCode = applicantPersonalInformation.PermanentPostalCode;
+                personalInformationExist.PermanentProvinceName = applicantPersonalInformation.PermanentProvinceName;
+                personalInformationExist.LastUpdatedBy = userId;
+                personalInformationExist.LastUpdatedDateTime = DateTime.Now;
+            }
+            else
+            {
+                applicantPersonalInformation.InsertedDateTime = DateTime.Now;
+                await _sisContext.TblAdmApplicantPersonalInformations.AddAsync(applicantPersonalInformation);
+            }
+            await _sisContext.SaveChangesAsync();
         }
 
-        public async Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria)
+        public async Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria, int userId)
         {
             var criteriaExists = await _sisContext.TblAdmApplicantAdmissionCriterias.FirstAsync(x => x.ApplicationRecId == applicantAdmissionCriteria.ApplicationRecId);
             if (criteriaExists != null)
             {
-                applicantAdmissionCriteria.InsertedDateTime = DateTime.Now;
+                criteriaExists.LastUpdatedDateTime = DateTime.Now;
+                criteriaExists.LastUpdatedBy = userId;
             }
             else
             {
-                applicantAdmissionCriteria.LastUpdatedDateTime = DateTime.Now;
+                applicantAdmissionCriteria.InsertedDateTime = DateTime.Now;
                 await _sisContext.TblAdmApplicantAdmissionCriterias.AddAsync(applicantAdmissionCriteria);
+
             }
             await _sisContext.SaveChangesAsync();
         }

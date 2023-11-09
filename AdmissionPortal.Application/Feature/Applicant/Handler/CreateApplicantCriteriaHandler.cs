@@ -27,7 +27,7 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
             model.CriteriaDisplayOrder = request.CriteriaDisplayOrder;
             model.InsertedBy = request.UserId;
 
-            await _applicationRepository.UpsertAdmissionCriteria(model);
+            await _applicationRepository.UpsertAdmissionCriteria(model,request.UserId);
             return result;
         }
     }

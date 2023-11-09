@@ -27,14 +27,13 @@ namespace AdmissionPortal.Infra.Data.Repository
         }
         public bool IsEmailAlreadyRegistered(string emailAddress) => _sisContext.TblSsaApplicationUsers.Any(x => x.EmailAddress == emailAddress);
         public bool IsMobileAlreadyRegistered(string mobile) => _sisContext.TblSsaApplicationUsers.Any(x => x.Mobile == mobile);
-        public async Task<bool> IsValidUserName(string username) => _sisContext.TblSsaApplicationUsers.Any(x => x.UserName == username);
-        public async Task<bool> IsValidActivationCode(string password) => _sisContext.TblSsaApplicationUsers.Any(x => x.UserPassword == password);
+        public async Task<bool> IsValidUserName(string username) =>await  _sisContext.TblSsaApplicationUsers.AnyAsync(x => x.UserName == username);
+        public async Task<bool> IsValidActivationCode(string password) =>await _sisContext.TblSsaApplicationUsers.AnyAsync(x => x.UserPassword == password);
         public async Task<string> GetPassword(string username)
         {
-            string password = _sisContext.TblSsaApplicationUsers.Where(x => x.UserName == username)
+            return await _sisContext.TblSsaApplicationUsers.Where(x => x.UserName == username)
                                                                 .Select(c => c.UserPassword)
-                                                                .FirstOrDefault();
-            return password;
+                                                                .FirstAsync();
         }
         public async Task<bool> IsRegistrationAvailable() => await _sisContext.TblAdmByTermAdmissionSchedules.AnyAsync(x => x.StartDateTime <= DateTime.Now && x.ExtenssionEndDateTime >= DateTime.Now);
         public TblMstAutoNotification GetRegistrationMessage()
@@ -49,10 +48,10 @@ namespace AdmissionPortal.Infra.Data.Repository
             {
                 registrationDetails.Mobile = applicationUser.Mobile;
                 registrationDetails.EmailAddress = applicationUser.EmailAddress;
-                registrationDetails.UserName=applicationUser.EmailAddress;
-                registrationDetails.LastUpdatedBy=applicationUser.LastUpdatedBy;
-                registrationDetails.LastUpdatedDateTime=applicationUser.LastUpdatedDateTime;
-                registrationDetails.TermsAcknowledged=applicationUser.TermsAcknowledged;
+                registrationDetails.UserName = applicationUser.EmailAddress;
+                registrationDetails.LastUpdatedBy = applicationUser.LastUpdatedBy;
+                registrationDetails.LastUpdatedDateTime = applicationUser.LastUpdatedDateTime;
+                registrationDetails.TermsAcknowledged = applicationUser.TermsAcknowledged;
                 var activationCode = registrationDetails.NationalId.GetLastFourCharacters() + registrationDetails.Mobile.GetLastFourCharacters();
                 registrationDetails.UserPassword = activationCode.Base64Encode();
                 await _sisContext.SaveChangesAsync();

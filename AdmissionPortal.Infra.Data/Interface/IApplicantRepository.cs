@@ -9,14 +9,14 @@ namespace AdmissionPortal.Infra.Data.Interface
         Task<string> GetMobileOtp(int applicationRecId);
         Task<ApplicantDto> CreateApplicationId(TblAdmApplicantApplicationMaster applicantApplicationMaster);
         Task GetApplicationDetails();
-        Task<List<InstructionsDto>> GetInstructions();
+        Task<List<InstructionsDto>> GetInstructions(string instructionType);
         Task<ApplicantPersonalDetailsDto> GetPersonalDetails(int userId);
         Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId);
-        Task GetAddressDetails(int applicationRecId, string applicationNumber);
-        Task UpSertAddressDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation);
+        Task<ApplicantAddressDto> GetAddressDetails(int applicationRecId, string applicationNumber);
+        Task UpSertAddressDetails(int userId, TblAdmApplicantPersonalInformation applicantPersonalInformation);
         Task GetEducationDetails();
         Task<List<AdmissionCriteriaDto>> GetAdmissionCriteria(int applicationRecId, string applicationNumber);
-        Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria);
+        Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria, int userId);
         Task<List<ApplicantPreferenceDto>> GetPreference(int applicationRecId, string applicationNumber);
         Task UpsertPreference(TblAdmApplicantPreferenceInformation applicantPreferenceInformation);
         Task<List<AdmissionQuestion>> GetAdditionalDetails(int applicationRecId, string applicationNumber);

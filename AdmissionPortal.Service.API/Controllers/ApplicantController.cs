@@ -1,7 +1,5 @@
 ﻿using AdmissionPortal.Application.Feature.Applicant.Commands;
 using AdmissionPortal.Application.Feature.Applicant.Queries;
-using AdmissionPortal.Application.Feature.Course.Queries;
-using AdmissionPortal.Application.Feature.MasterData.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +26,8 @@ namespace AdmissionPortal.Service.API.Controllers
         [Route("/Instructions")]
         public async Task<IActionResult> GetInstructions(CancellationToken cancellationToken)
         {
+            var query = new GetInstructionsQuery();
+            query.InstructionType = "Instructions";
             return Ok(await _mediator.Send(new GetInstructionsQuery(), cancellationToken));
         }
 
@@ -148,6 +148,29 @@ namespace AdmissionPortal.Service.API.Controllers
             await _mediator.Send(detailsCommand, cancellationToken);
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("/AddressDetails")]
+        public async Task<IActionResult> GetAddressDetails([FromBody] GetApplicantAddressQuery addressQuery, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(addressQuery, cancellationToken));
+        }
+
+        [HttpPost]
+        [Route("/AddressDetails")]
+        public async Task<IActionResult> CreateAddressDetails([FromBody] CreateAddressDetailsCommand addressQuery, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(addressQuery, cancellationToken));
+        }
+
+        [HttpGet]
+        [Route("/Declaration")]
+        public async Task<IActionResult> GetDeclaration(CancellationToken cancellationToken)
+        {
+            var query = new GetInstructionsQuery();
+            query.InstructionType = "Declaration";
+            return Ok(await _mediator.Send(new GetInstructionsQuery(), cancellationToken));
         }
     }
 }

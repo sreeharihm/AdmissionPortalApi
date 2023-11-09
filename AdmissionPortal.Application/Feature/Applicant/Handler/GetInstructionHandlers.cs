@@ -14,7 +14,7 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
         }
         public async Task<List<InstructionsDto>> Handle(GetInstructionsQuery request, CancellationToken cancellationToken)
         {
-            return await _applicationRepository.GetInstructions();
+            return await _applicationRepository.GetInstructions(request.InstructionType);
         }
     }
 }
