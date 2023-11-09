@@ -20,10 +20,15 @@ namespace AdmissionPortal.Service.API.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginAsync([FromBody] LoginCommand model)
         {
-            bool isSucess = await _mediator.Send(model);
-            if (isSucess)
-                return Ok();
-            return Unauthorized();
+            if (HttpContext.Response.Headers.ContainsKey("Authorization"))
+            {
+                string token = HttpContext.Response.Headers["Authorization"].ToString();
+                return Ok(new { token });
+            }
+            else
+            {
+                return Unauthorized("Authentication failed");
+            }
         }
 
 

@@ -13,5 +13,6 @@ namespace AdmissionPortal.Infra.Data.Interface
         Task<bool> ResetPassword(string emailId, string password);
         public Task<bool> IsRegistrationAvailable();
         public TblMstAutoNotification GetRegistrationMessage();
+        public Task<string> UpdateRegistrationDetails(TblSsaApplicationUser applicationUser);
     }
 }

@@ -27,8 +27,6 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             var response = new UserDto();
             userDetails.NationalId = command.NationalId;
             userDetails.Nationality = command.Nationality;
-            userDetails.EmailAddress = command.EmailAddress;
-            userDetails.Mobile = command.Mobile;
             userDetails.Gender = command.Gender;
             userDetails.FirstNameEng = command.FirstNameEng;
             userDetails.LastNameEng = command.LastNameEng;
@@ -38,25 +36,13 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             if (!string.IsNullOrEmpty(command.LastNameLocal)) userDetails.LastNameLocal = command.LastNameLocal;
             if (!string.IsNullOrEmpty(command.FatherNameLocal)) userDetails.FatherNameLocal = command.FatherNameLocal;
             if (!string.IsNullOrEmpty(command.GrandFatherNameLocal)) userDetails.GrandFatherNameLocal = command.GrandFatherNameLocal;
-            userDetails.UserName = command.EmailAddress;
-            var activationCode = command.NationalId.GetLastFourCharacters() + command.Mobile.GetLastFourCharacters();
-            userDetails.UserPassword = activationCode.Base64Encode();
-            userDetails.TermsAcknowledged = command.TermsAcknowledged;
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
             userDetails.InsertedBy = command.InsertedBy;
             userDetails.InsertedDateTime = DateTime.UtcNow;
+            userDetails.UserName = command.FirstNameEng;userDetails.UserPassword= command.LastNameEng;
             response.UserId = await _applicationUserRepository.AddUser(userDetails);
-
-            //userDetails.UserType = need to ask 
-            var data = _applicationUserRepository.GetRegistrationMessage();
-            StringBuilder sb= new StringBuilder(data.EmailMessageEng);
-            sb.Replace("<%UserName%>", userDetails.EmailAddress);
-            sb.Replace("<%Password%>", userDetails.UserPassword);
-            var message = new Message(userDetails.EmailAddress, "Welcome",sb.ToString());
-
-            _emailSender.SendEmail(message);
             response.Message = "User registration succesfull";
-            response.ActivationCode = activationCode;
+            response.ActivationCode = "";
             return response;
         }
     }

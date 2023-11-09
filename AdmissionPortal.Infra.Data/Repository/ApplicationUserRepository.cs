@@ -25,7 +25,6 @@ namespace AdmissionPortal.Infra.Data.Repository
             await _sisContext.SaveChangesAsync();
             return true;
         }
-
         public bool IsEmailAlreadyRegistered(string emailAddress) => _sisContext.TblSsaApplicationUsers.Any(x => x.EmailAddress == emailAddress);
         public bool IsMobileAlreadyRegistered(string mobile) => _sisContext.TblSsaApplicationUsers.Any(x => x.Mobile == mobile);
         public async Task<bool> IsValidUserName(string username) => _sisContext.TblSsaApplicationUsers.Any(x => x.UserName == username);
@@ -41,6 +40,25 @@ namespace AdmissionPortal.Infra.Data.Repository
         public TblMstAutoNotification GetRegistrationMessage()
         {
             return _sisContext.TblMstAutoNotifications.First(x => x.AutoNotificationRecId == 1);
+        }
+
+        public async Task<string> UpdateRegistrationDetails(TblSsaApplicationUser applicationUser)
+        {
+            var registrationDetails = await _sisContext.TblSsaApplicationUsers.FirstOrDefaultAsync(i => i.UserId == applicationUser.UserId);
+            if (registrationDetails != null)
+            {
+                registrationDetails.Mobile = applicationUser.Mobile;
+                registrationDetails.EmailAddress = applicationUser.EmailAddress;
+                registrationDetails.UserName=applicationUser.EmailAddress;
+                registrationDetails.LastUpdatedBy=applicationUser.LastUpdatedBy;
+                registrationDetails.LastUpdatedDateTime=applicationUser.LastUpdatedDateTime;
+                registrationDetails.TermsAcknowledged=applicationUser.TermsAcknowledged;
+                var activationCode = registrationDetails.NationalId.GetLastFourCharacters() + registrationDetails.Mobile.GetLastFourCharacters();
+                registrationDetails.UserPassword = activationCode.Base64Encode();
+                await _sisContext.SaveChangesAsync();
+                return activationCode;
+            }
+            return "";
         }
 
     }
