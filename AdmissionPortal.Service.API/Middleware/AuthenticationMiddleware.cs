@@ -37,7 +37,9 @@ namespace AdmissionPortal.Service.API
                     if (userId > 0)
                     {
                         var token = GenerateJwtToken(loginDetails.Username, userId);
-                        httpContext.Request.Headers.Add("Authorization", $"Bearer {token}");
+                        string data = $"Bearer {token}";
+                        httpContext.Request.Headers.Add("Authorization", data);
+                        httpContext.Response.Headers.Add("Authorization", data);
                     }
                     else
                     {

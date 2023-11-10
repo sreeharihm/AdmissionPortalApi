@@ -19,7 +19,6 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
         {
             var applicantPersonalInformation = new TblAdmApplicantPersonalInformation();
             applicantPersonalInformation.UserId = request.UserId;
-            applicantPersonalInformation.CountryId= request.NationalId;
             applicantPersonalInformation.FisrtNameEng = request.FirstNameEng;
             applicantPersonalInformation.SecondNameEng = request.LastNameEng;
             applicantPersonalInformation.FisrtNameLocal = request.FirstNameLocal;
@@ -34,8 +33,14 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
             applicantPersonalInformation.CountryId = request.CountryId;
             applicantPersonalInformation.IsMobileVerified = request.IsMobileVerified;
             applicantPersonalInformation.IsEmailVerified = request.IsEmailVerified;
-            await Task.Delay(10);
-            return new ApplicantDto();
+            await _applicationRepository.UpSertPersonalDetails(applicantPersonalInformation, request.UserId, request.ApplicationRecId);
+            var result = new ApplicantDto
+            {
+                ApplicationRecId = request.ApplicationRecId,
+                ApplicationNumber = request.ApplicationNumber,
+                Message = "Personal details updated successfully"
+            };
+            return result;
         }
     }
 }

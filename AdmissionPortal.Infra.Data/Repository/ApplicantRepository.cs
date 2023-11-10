@@ -2,6 +2,7 @@
 using AdmissionPortal.Infra.Data.Interface;
 using AdmissionPortal.Infra.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Bcpg;
 
 namespace AdmissionPortal.Infra.Data.Repository
 {
@@ -30,11 +31,55 @@ namespace AdmissionPortal.Infra.Data.Repository
             int count = _sisContext.TblAdmApplicantApplicationMasters.Count() + 1;
             applicantApplicationMaster.ApplicationStatusRecId = 2; // MSTApplicationStatus Id=2- Application Initiated
             applicantApplicationMaster.ApplicationNumber = applicantApplicationMaster.ApplicationNumber + Convert.ToString(count);
+            applicantApplicationMaster.InsertedBy = applicantApplicationMaster.UserId;
+            applicantApplicationMaster.InsertedDateTime = DateTime.Now;
             _sisContext.Add(applicantApplicationMaster);
             await _sisContext.SaveChangesAsync();
             applicant.ApplicationRecId = applicantApplicationMaster.ApplicationRecId;
             applicant.ApplicationNumber = applicantApplicationMaster.ApplicationNumber;
+            applicant.Message = "Application created successfully";
+            await UpsertApplicationMasterDetails(applicant.ApplicationRecId, "PersonalDetails", 2, applicantApplicationMaster.InsertedBy);
             return applicant;
+        }
+        public async Task UpsertApplicationMaster(int applicationRecId, string stage, int userId)
+        {
+            var exist = await _sisContext.TblAdmApplicantApplicationMasters.FirstOrDefaultAsync(x => x.ApplicationRecId == applicationRecId);
+            if (exist != null)
+            {
+                if (stage.Equals("PersonalDataCompleted"))
+                {
+                    exist.PersonalDataCompleted = true;
+                    exist.PersonalDataCompletedDate = DateTime.Now;
+                }
+                exist.LastUpdatedDateTime = DateTime.Now;
+                exist.LastUpdatedBy = userId;
+            }
+            await _sisContext.SaveChangesAsync();
+        }
+
+        public async Task UpsertApplicationMasterDetails(int applicationRecId, string nextStep, int status, int userId)
+        {
+            var exist = await _sisContext.TblAdmApplicantApplicationMasterDetails.FirstOrDefaultAsync(x => x.ApplicationRecId == applicationRecId);
+            if (exist != null)
+            {
+                exist.ApplicationNextStep = nextStep;
+                exist.ApplicationStatusUpdateDate = DateTime.Now;
+                exist.LastUpdatedBy = userId;
+                exist.LastUpdatedDateTime = DateTime.Now;
+            }
+            else
+            {
+                var model = new TblAdmApplicantApplicationMasterDetail();
+                model.ApplicationRecId = applicationRecId;
+                model.ApplicationStatusRecId = status;
+                model.ApplicationStatusUpdateDate = DateTime.Now;
+                model.ApplicationNextStepDate = DateTime.Now;
+                model.ApplicationNextStep = nextStep;
+                model.InsertedBy = userId;
+                model.InsertedDateTime = DateTime.Now;
+                await _sisContext.TblAdmApplicantApplicationMasterDetails.AddAsync(model);
+            }
+            await _sisContext.SaveChangesAsync();
         }
 
         public async Task<List<AdmissionQuestion>> GetAdditionalDetails(int applicationRecId, string applicationNumber)
@@ -191,7 +236,8 @@ namespace AdmissionPortal.Infra.Data.Repository
                 result.FirstNameEng = userDetails.FirstNameEng;
                 result.LastNameEng = userDetails.LastNameEng;
                 result.GrandFatherNameEng = userDetails.GrandFatherNameEng;
-                result.CountryId = Convert.ToInt32(userDetails.Nationality);
+                var countryId = _sisContext.TblMstCountryMasters.FirstOrDefault(m => m.CountryName == userDetails.Nationality).CountryRecId;
+                result.CountryId = countryId;
                 result.NationalId = userDetails.NationalId;
                 result.PrimaryEmailId = userDetails.EmailAddress;
                 result.PrimaryMobileNo = userDetails.Mobile;
@@ -279,7 +325,7 @@ namespace AdmissionPortal.Infra.Data.Repository
 
         public async Task UpsertAdmissionCriteria(TblAdmApplicantAdmissionCriteria applicantAdmissionCriteria, int userId)
         {
-            var criteriaExists = await _sisContext.TblAdmApplicantAdmissionCriterias.FirstAsync(x => x.ApplicationRecId == applicantAdmissionCriteria.ApplicationRecId);
+            var criteriaExists = await _sisContext.TblAdmApplicantAdmissionCriterias.FirstOrDefaultAsync(x => x.ApplicationRecId == applicantAdmissionCriteria.ApplicationRecId);
             if (criteriaExists != null)
             {
                 criteriaExists.LastUpdatedDateTime = DateTime.Now;
@@ -295,7 +341,7 @@ namespace AdmissionPortal.Infra.Data.Repository
         }
 
 
-        public async Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId)
+        public async Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId, int applicationRecId)
         {
             var isUserExists = await _sisContext.TblAdmApplicantPersonalInformations.FirstOrDefaultAsync(x => x.UserId == applicantPersonalInformation.UserId);
             if (isUserExists != null)
@@ -322,12 +368,15 @@ namespace AdmissionPortal.Infra.Data.Repository
             {
                 _sisContext.TblAdmApplicantPersonalInformations.Add(applicantPersonalInformation);
             }
+            await UpsertApplicationMaster(applicationRecId, "PersonalDataCompleted", userId);
+
             await _sisContext.SaveChangesAsync();
+            await UpsertApplicationMasterDetails(applicationRecId, "Address Detail", 4,applicantPersonalInformation.UserId);
         }
 
         public async Task UpsertPreference(TblAdmApplicantPreferenceInformation applicantPreferenceInformation)
         {
-            var existingPreference = await _sisContext.TblAdmApplicantPreferenceInformations.FirstAsync(x => x.ApplicationRecId == 0 && x.ProgramPreferenceRecId == 0);
+            var existingPreference = await _sisContext.TblAdmApplicantPreferenceInformations.FirstOrDefaultAsync(x => x.ApplicationRecId == 0 && x.ProgramPreferenceRecId == 0);
             if (existingPreference != null)
             {
                 existingPreference.ProgramPreferenceRecId = applicantPreferenceInformation.ProgramPreferenceRecId;
@@ -349,7 +398,7 @@ namespace AdmissionPortal.Infra.Data.Repository
         {
             return await (from asm in _sisContext.TblAdmApplicantApplicationMasters
                           join ac in _sisContext.TblAdmByTermAdmissionChecklists
-                          on asm.AdmissionTypeRecId equals ac.AdmissionScheduleRecId
+                          on asm.AcademicYearRecId equals ac.AdmissionScheduleRecId
                           join apm in _sisContext.TblAdmApplicantPersonalInformations
                           on asm.ApplicationRecId equals userId
                           where

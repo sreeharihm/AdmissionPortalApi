@@ -37,9 +37,10 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             if (!string.IsNullOrEmpty(command.FatherNameLocal)) userDetails.FatherNameLocal = command.FatherNameLocal;
             if (!string.IsNullOrEmpty(command.GrandFatherNameLocal)) userDetails.GrandFatherNameLocal = command.GrandFatherNameLocal;
             userDetails.GuidelinesAcknowledged = command.GuidelinesAcknowledged;
-            userDetails.InsertedBy = command.InsertedBy;
+            userDetails.InsertedBy = 1;
             userDetails.InsertedDateTime = DateTime.UtcNow;
-            userDetails.UserName = command.FirstNameEng;userDetails.UserPassword= command.LastNameEng;
+            userDetails.UserName = command.FirstNameEng;
+            userDetails.UserPassword= command.LastNameEng;
             response.UserId = await _applicationUserRepository.AddUser(userDetails);
             response.Message = "User registration succesfull";
             response.ActivationCode = "";

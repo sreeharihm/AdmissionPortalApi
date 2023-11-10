@@ -19,8 +19,5 @@ namespace AdmissionPortal.Application.Feature.Registration.Commands
         public bool? Gender { get; set; }
         public DateTime DateofBirth { get; set; }      
         public bool? GuidelinesAcknowledged { get; set; } = true;      
-        public int? InsertedBy { get; set; } = 1;
-        public DateTime InsertedDateTime { get; set; }
-
     }
 }

@@ -16,9 +16,25 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
         public async Task<ApplicantDto> Handle(CreateApplicantEducationCommand request, CancellationToken cancellationToken)
         {
             var data = new TblAdmApplicantEducationalInformation
-            { };
+            {
+                ApplicationRecId = request.ApplicationRecId,
+                CertificateType = request.CertificateType,
+                SchoolName = request.SchoolName,
+                CountryRecId = request.CountryId,
+                ProvinceName = request.ProvinceName,
+                CityName = request.CityName,
+                StudyCenterName = request.StudyCenterName,
+                GraduationYear = request.GraducationYear,
+                GradeType = request.GradeType,
+                ExternalCode = request.ExternalCode,
+                InsertedBy = request.UserId
+            };
             await _applicationRepository.UpsertEducationDetials(data, request.UserId);
-            var result = new ApplicantDto { };
+            var result = new ApplicantDto
+            {
+                ApplicationRecId = request.ApplicationRecId,
+                Message = "Education Details updated successfully"
+            };
             return result;
         }
     }

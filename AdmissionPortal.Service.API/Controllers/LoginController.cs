@@ -18,7 +18,7 @@ namespace AdmissionPortal.Service.API.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginCommand model)
+        public async Task<IActionResult> Login([FromBody] LoginCommand model)
         {
             if (HttpContext.Response.Headers.ContainsKey("Authorization"))
             {

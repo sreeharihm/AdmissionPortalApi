@@ -1,11 +1,13 @@
 ﻿using AdmissionPortal.Application.Feature.Applicant.Commands;
 using AdmissionPortal.Application.Feature.Applicant.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdmissionPortal.Service.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ApplicantController : ControllerBase
     {
@@ -21,6 +23,7 @@ namespace AdmissionPortal.Service.API.Controllers
         [Route("/CreateApplication")]
         public async Task<IActionResult> GetInstructions([FromBody] CreateApplicantCommand applicantCommand, CancellationToken cancellationToken)
         {
+            applicantCommand.UserId = _userId;
             return Ok(await _mediator.Send(applicantCommand, cancellationToken));
         }
 
@@ -30,14 +33,19 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             var query = new GetInstructionsQuery();
             query.InstructionType = "Instructions";
-            return Ok(await _mediator.Send(new GetInstructionsQuery(), cancellationToken));
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
 
         [HttpGet]
         [Route("/PersonalDetails")]
-        public async Task<IActionResult> GetPersonalDetails(GetApplicantPersonalDetailsQuery personalDetailsQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPersonalDetails(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            personalDetailsQuery.UserId = _userId;
+            var personalDetailsQuery = new GetApplicantPersonalDetailsQuery
+            {
+                UserId = _userId,
+                ApplicationNumber = ApplicationNumber,
+                ApplicationRecId = ApplicationRecId
+            };
             return Ok(await _mediator.Send(personalDetailsQuery, cancellationToken));
         }
 
@@ -45,15 +53,20 @@ namespace AdmissionPortal.Service.API.Controllers
         [Route("/PersonalDetails")]
         public async Task<IActionResult> CreatePersonalDetails([FromBody] CreateApplicantPersonalDetailsCommand personalDetailsCommand, CancellationToken cancellationToken)
         {
-            personalDetailsCommand.UserId= _userId;
+            personalDetailsCommand.UserId = _userId;
             return Ok(await _mediator.Send(personalDetailsCommand, cancellationToken));
         }
 
         [HttpGet]
         [Route("/ProgramPreferences")]
-        public async Task<IActionResult> GetProgramPreferences(GetProgramPreferencesQuery programPreferenceQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProgramPreferences(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(programPreferenceQuery, cancellationToken));
+            var query = new GetProgramPreferencesQuery
+            {
+                ApplicationRecId = ApplicationRecId,
+                ApplicationNumber = ApplicationNumber,
+            };
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
 
         [HttpPost]
@@ -62,7 +75,7 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             foreach (var command in perferenceCommand)
             {
-                command.UserId= _userId;
+                command.UserId = _userId;
                 await _mediator.Send(command, cancellationToken);
             }
             return Ok();
@@ -70,9 +83,14 @@ namespace AdmissionPortal.Service.API.Controllers
 
         [HttpGet]
         [Route("/AdditionalDetails")]
-        public async Task<IActionResult> GetAdditionalDetails(GetAdditionalDetailsQuery additionalDetailsQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAdditionalDetails(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(additionalDetailsQuery, cancellationToken));
+            var query = new GetAdditionalDetailsQuery
+            {
+                ApplicationRecId = ApplicationRecId,
+                ApplicationNumber = ApplicationNumber,
+            };
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
 
         [HttpPost]
@@ -81,16 +99,21 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             foreach (var command in detailsCommand)
             {
-                command.UserId= _userId;
+                command.UserId = _userId;
                 await _mediator.Send(command, cancellationToken);
             }
             return Ok();
         }
         [HttpGet]
         [Route("/AdmissionCriteria")]
-        public async Task<IActionResult> GetAdmissionCriteria(GetAdditionalDetailsQuery additionalDetailsQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAdmissionCriteria(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(additionalDetailsQuery, cancellationToken));
+            var query = new GetAdmissionCriteriaQuery
+            {
+                ApplicationRecId = ApplicationRecId,
+                ApplicationNumber = ApplicationNumber,
+            };
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
 
         [HttpPost]
@@ -99,17 +122,23 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             foreach (var command in detailsCommand)
             {
-                command.UserId= _userId;
+                command.UserId = _userId;
                 await _mediator.Send(command, cancellationToken);
             }
             return Ok();
         }
         [HttpGet]
         [Route("/CheckList")]
-        public async Task<IActionResult> GetApplicantCheckList(GetApplicantCheckListQuery checkListQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetApplicantCheckList(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            checkListQuery.UserId= _userId;
-            return Ok(await _mediator.Send(checkListQuery, cancellationToken));
+            var query = new GetApplicantCheckListQuery
+            {
+                UserId = _userId,
+                ApplicationRecId = ApplicationRecId,
+                ApplicationNumber = ApplicationNumber,
+            };
+            query.UserId = _userId;
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
 
         [HttpPost]
@@ -118,7 +147,7 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             foreach (var command in detailsCommand)
             {
-                command.UserId= _userId;
+                command.UserId = _userId;
                 await _mediator.Send(command, cancellationToken);
             }
             return Ok();
@@ -126,10 +155,15 @@ namespace AdmissionPortal.Service.API.Controllers
 
         [HttpGet]
         [Route("/DropDownDetails")]
-        public async Task<IActionResult> GetEducationDetails(GetApplicantCheckListQuery checkListQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetEducationDetails(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            checkListQuery.UserId= _userId;
-            return Ok(await _mediator.Send(checkListQuery, cancellationToken));
+            var query = new GetApplicantCheckListQuery
+            {
+                UserId = _userId,
+                ApplicationRecId = ApplicationRecId,
+                ApplicationNumber = ApplicationNumber,
+            };
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
         [HttpPost]
         [Route("/EducationDetails")]
@@ -147,7 +181,7 @@ namespace AdmissionPortal.Service.API.Controllers
         [Route("/SendEmailOtp")]
         public async Task<IActionResult> SendEmailOtp([FromBody] CreateApplicantEducationCommand detailsCommand, CancellationToken cancellationToken)
         {
-            detailsCommand.UserId= _userId;
+            detailsCommand.UserId = _userId;
             await _mediator.Send(detailsCommand, cancellationToken);
             return Ok();
         }
@@ -156,16 +190,21 @@ namespace AdmissionPortal.Service.API.Controllers
         [Route("/VerifyEmailOtp")]
         public async Task<IActionResult> VerifyEmailOtp([FromBody] CreateApplicantEducationCommand detailsCommand, CancellationToken cancellationToken)
         {
-            detailsCommand.UserId= _userId;
+            detailsCommand.UserId = _userId;
             await _mediator.Send(detailsCommand, cancellationToken);
             return Ok();
         }
 
         [HttpGet]
         [Route("/AddressDetails")]
-        public async Task<IActionResult> GetAddressDetails([FromBody] GetApplicantAddressQuery addressQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAddressDetails(string ApplicationNumber, int ApplicationRecId, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(addressQuery, cancellationToken));
+            var query = new GetApplicantAddressQuery
+            {
+                ApplicationNumber = ApplicationNumber,
+                ApplicationRecId = ApplicationRecId,
+            };
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
 
         [HttpPost]
@@ -182,7 +221,7 @@ namespace AdmissionPortal.Service.API.Controllers
         {
             var query = new GetInstructionsQuery();
             query.InstructionType = "Declaration";
-            return Ok(await _mediator.Send(new GetInstructionsQuery(), cancellationToken));
+            return Ok(await _mediator.Send(query, cancellationToken));
         }
     }
 }

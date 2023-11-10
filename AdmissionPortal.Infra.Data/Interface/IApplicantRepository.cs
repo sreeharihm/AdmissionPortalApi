@@ -11,7 +11,7 @@ namespace AdmissionPortal.Infra.Data.Interface
         Task GetApplicationDetails();
         Task<List<InstructionsDto>> GetInstructions(string instructionType);
         Task<ApplicantPersonalDetailsDto> GetPersonalDetails(int userId);
-        Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId);
+        Task UpSertPersonalDetails(TblAdmApplicantPersonalInformation applicantPersonalInformation, int userId, int applicationRecId);
         Task<ApplicantAddressDto> GetAddressDetails(int applicationRecId, string applicationNumber);
         Task UpSertAddressDetails(int userId, TblAdmApplicantPersonalInformation applicantPersonalInformation);
         Task GetEducationDetails();

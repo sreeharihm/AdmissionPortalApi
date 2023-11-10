@@ -36,7 +36,7 @@ namespace AdmissionPortal.Infra.Data.Repository
             result.courseYears.AddRange(await (from ast in _sisContext.TblAdmByTermAdmissionSchedules
                                                join ay in _sisContext.TblRegAcademicYears
                                                on ast.AcademicYearRecId equals ay.AcademicYearRecId
-                                               select new CourseYear { AyStartYear = ay.AystartYear, AyEndYear = ay.AyendYear, AyStartYearLocal = ay.AystartYearLocal, AyEndYearLocal = ay.AyendYear1Local }
+                                               select new CourseYear { AyStartYear = ay.AystartYear, AyEndYear = ay.AyendYear, AyStartYearLocal = ay.AystartYearLocal, AyEndYearLocal = ay.AyendYear1Local, AcademicYearRecId =ay.AcademicYearRecId }
                               ).Distinct().ToListAsync());
 
             var courseTenure = await (from t in _sisContext.TblRegTermMasters

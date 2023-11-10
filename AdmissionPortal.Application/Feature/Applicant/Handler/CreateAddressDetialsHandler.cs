@@ -32,6 +32,9 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
             model.PermanentPostalCode = request.PermanentPostalCode;
             model.PermanentProvinceName = request.PermanentProvinceName;
             await _applicationRepository.UpSertAddressDetails(request.UserId, model);
+            result.ApplicationNumber = request.ApplicationNumber;
+            result.ApplicationRecId = request.ApplicationRecId;
+            result.Message = "Address Details Updated Successfully";
             return result;
         }
     }

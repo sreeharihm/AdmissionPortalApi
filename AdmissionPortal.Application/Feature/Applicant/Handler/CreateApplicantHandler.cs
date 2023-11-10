@@ -22,6 +22,7 @@ namespace AdmissionPortal.Application.Feature.Applicant.Handler
             applicantMaster.DegreeTypeRecId = request.DegreeTypeRecId;
             applicantMaster.AcademicYearRecId = request.AcademicYearRecId;
             applicantMaster.TermId = request.TermId;
+            applicantMaster.UserId= request.UserId;
             Random generator = new Random();
             applicantMaster.EmailOtp = generator.Next(0, 1000000).ToString("D6");
             applicantMaster.MobileOtp = generator.Next(0, 1000000).ToString("D6");

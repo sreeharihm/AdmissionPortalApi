@@ -8,7 +8,6 @@ namespace AdmissionPortal.Application.Feature.Applicant.Commands
         public string ApplicationNumber { get; set; }
         public int ApplicationRecId { get; set; }
         public int UserId { get; set; }
-        public int NationalId { get; set; }
         public string FirstNameEng { get; set; }
         public string LastNameEng { get; set; }
         public string FirstNameLocal { get; set; }

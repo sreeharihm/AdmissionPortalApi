@@ -34,8 +34,8 @@ namespace AdmissionPortal.Application.Feature.Registrarion.Handlers
             userDetails.Mobile = command.Mobile;           
             userDetails.UserName = command.EmailAddress;           
             userDetails.TermsAcknowledged = command.TermsAcknowledged;
-            userDetails.LastUpdatedBy = command.LastUpdatedBy;
-            userDetails.LastUpdatedDateTime = DateTime.UtcNow;
+            userDetails.LastUpdatedBy = command.UserId;
+            userDetails.LastUpdatedDateTime = DateTime.Now;
             string activationCode = await _applicationUserRepository.UpdateRegistrationDetails(userDetails);
             if (!string.IsNullOrEmpty(activationCode))
             {
