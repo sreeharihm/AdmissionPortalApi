@@ -26,14 +26,33 @@ namespace AdmissionPortal.Application.Helpers
                 {
                     string url=_smsConfig.Url;
                     var credentials = _smsConfig.Apikey + ":" + _smsConfig.Apisecret;
-                   
-                    var message = new
+
+                    string no = "+917736938788" ;
+                    List<string> numberList = no.Split(',').ToList();
+
+                    List<message> messages = new List<message>();
+                    message messageSend = new message();
+                    messageSend.text = "hhhhjihkjjhkjkjkjk";
+                    messageSend.numbers = numberList;
+                    messages.Add(messageSend);
+
+                    var sendData = new SendData
                     {
-                        text = "test",
-                        numbers = new string[] { "7736938788" },
-                        sender="test"
+                        messages = messages,
+                        globals = new Globals
+                        {
+                            number_iso = "SA",
+                            sender = "test"
+                        }
                     };
-                    var content = new StringContent(JsonConvert.SerializeObject(message), Encoding.UTF8, "application/json");
+
+                    //var message = new
+                    //{
+                    //    text = "test",
+                    //    numbers = new string[] { "7736938788" },
+                    //    sender="test"
+                    //};
+                    var content = new StringContent(JsonConvert.SerializeObject(sendData), Encoding.UTF8, "application/json");
                     httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
                     var response = await httpClient.PostAsync(url, content);
                     if (response.IsSuccessStatusCode)

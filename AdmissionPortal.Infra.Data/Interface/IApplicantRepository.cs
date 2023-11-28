@@ -5,8 +5,8 @@ namespace AdmissionPortal.Infra.Data.Interface
 {
     public interface IApplicantRepository
     {
-        Task<string> GetEmailOtp(int applicationRecId);
-        Task<string> GetMobileOtp(int applicationRecId);
+        Task<string> GetEmailOtp(int userId);
+        Task<string> GetMobileOtp(int userId);
         Task<ApplicantDto> CreateApplicationId(TblAdmApplicantApplicationMaster applicantApplicationMaster);
         Task GetApplicationDetails();
         Task<List<InstructionsDto>> GetInstructions(string instructionType);

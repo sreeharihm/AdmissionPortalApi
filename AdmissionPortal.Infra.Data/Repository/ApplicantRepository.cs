@@ -13,14 +13,14 @@ namespace AdmissionPortal.Infra.Data.Repository
             _sisContext = sisContext;
         }
 
-        public async Task<string> GetEmailOtp(int applicationRecId)
+        public async Task<string> GetEmailOtp(int userId)
         {
-            var applicationMaster = await _sisContext.TblAdmApplicantApplicationMasters.FirstOrDefaultAsync(x => x.ApplicationRecId == applicationRecId);
+            var applicationMaster = await _sisContext.TblAdmApplicantApplicationMasters.FirstOrDefaultAsync(x => x.UserId == userId);
             return applicationMaster.EmailOtp;
         }
-        public async Task<string> GetMobileOtp(int applicationRecId)
+        public async Task<string> GetMobileOtp(int userId)
         {
-            var applicationMaster = await _sisContext.TblAdmApplicantApplicationMasters.FirstOrDefaultAsync(x => x.ApplicationRecId == applicationRecId);
+            var applicationMaster = await _sisContext.TblAdmApplicantApplicationMasters.FirstOrDefaultAsync(x => x.UserId == userId);
             return applicationMaster.MobileOtp;
         }
 
